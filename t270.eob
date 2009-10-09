@@ -1,0 +1,6 @@
+<Obj name="t270">
+	<ObjFile fileName="t270u.obj"/>
+	<Shader Vertex="shader.vert" Fragment="shader.frag"/>
+	<Position x="0.0" y="0.0" z="-5.0"/>
+	<Rotation x="0.0" y="0.0" z="0.0"/>
+</Obj>
