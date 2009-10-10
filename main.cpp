@@ -38,93 +38,7 @@ void setupwindow(SDL_WindowID *window, SDL_GLContext *context, int height, int w
 }
 
 void setupSzene(SDL_WindowID window) {
-//	int i; /* Simple iterator */
-//	GLuint vao, vbo[2]; /* Create handles for our Vertex Array Object and two Vertex Buffer Objects */
-	//GLfloat projectionmatrix[16]; /* Our projection matrix starts with all 0s */
-	//GLfloat modelmatrix[16]; /* Our model matrix  */
-	/* An identity matrix we use to perform the equivalant of glLoadIdentity */
-	//const GLfloat identitymatrix[16] = IDENTITY_MATRIX4; 
-
-	/* Verticies to make 4 triangles in the shape of a tetrahedron */
-/*	const GLfloat tetrahedron[12][3] = {
-	{  1.0,  1.0,  1.0  }, 
-	{ -1.0, -1.0,  1.0  },
-	{ -1.0,  1.0, -1.0  },
-	{  1.0,  1.0,  1.0  },
-	{ -1.0, -1.0,  1.0  },
-	{  1.0, -1.0, -1.0  },
-	{  1.0,  1.0,  1.0  },
-	{ -1.0,  1.0, -1.0  },
-	{  1.0, -1.0, -1.0  },
-	{ -1.0, -1.0,  1.0  },
-	{ -1.0,  1.0, -1.0  },
-	{  1.0, -1.0, -1.0  } };
-
-	const GLfloat colors[12][3] = {
-	{  1.0,  0.0,  0.0  }, 
-	{  1.0,  0.0,  0.0  }, 
-	{  1.0,  0.0,  0.0  }, 
-	{  0.0,  1.0,  0.0  },
-	{  0.0,  1.0,  0.0  },
-	{  0.0,  1.0,  0.0  },
-	{  0.0,  0.0,  1.0  },
-	{  0.0,  0.0,  1.0  },
-	{  0.0,  0.0,  1.0  },
-	{  1.0,  1.0,  1.0  },
-	{  1.0,  1.0,  1.0  },
-	{  1.0,  1.0,  1.0  } };
-
-	GLchar *vertexsource, *fragmentsource;
-
-	GLuint vertexshader, fragmentshader;
-
-	GLuint shaderprogram;
-
-	glGenVertexArrays(1, &vao);
-
-	glBindVertexArray(vao);
-
-	glGenBuffers(2, vbo);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-
-	glBufferData(GL_ARRAY_BUFFER, 36 * sizeof(GLfloat), tetrahedron, GL_STATIC_DRAW);
-	
-	glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-
-	glBufferData(GL_ARRAY_BUFFER, 36 * sizeof(GLfloat), colors, GL_STATIC_DRAW);
-
-	glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	glEnableVertexAttribArray(1);
-
-	vertexsource = readShader("shader.vert");
-	fragmentsource = readShader("shader.frag");
-
-	vertexshader = glCreateShader(GL_VERTEX_SHADER);
-	fragmentshader = glCreateShader(GL_FRAGMENT_SHADER);
-
-	glShaderSource(vertexshader, 1, (const GLchar**)&vertexsource, 0);
-	glShaderSource(fragmentshader, 1, (const GLchar**)&fragmentsource, 0);
-
-	glCompileShader(vertexshader);
-	glCompileShader(fragmentshader);
-
-	shaderprogram = glCreateProgram();
-	shader = shaderprogram;
-	
-	glAttachShader(shaderprogram, vertexshader);
-	glAttachShader(shaderprogram, fragmentshader);
-	
-	glBindAttribLocation(shaderprogram, 0, "in_Position");
-	glBindAttribLocation(shaderprogram, 1, "in_Color");
-
-	glLinkProgram(shaderprogram);
-	glUseProgram(shaderprogram);*/
+	foo = new Obj("box.eob");
 }
 
 void drawscene(SDL_WindowID window) {
@@ -134,7 +48,6 @@ void drawscene(SDL_WindowID window) {
 	const GLfloat identitymatrix[16] = IDENTITY_MATRIX4; 
 
 	perspective(projectionmatrix, 45.0, 1.0, 0.1, 100.0);
-	foo->draw(NULL);
 	
 	i = (i+1)%360;
 	/* Load the identity matrix into modelmatrix. rotate the model, and move it back 5 */
@@ -150,17 +63,13 @@ void drawscene(SDL_WindowID window) {
 	glUniformMatrix4fv(glGetUniformLocation(foo->getShaderHandle(), "mvpmatrix"), 1, GL_FALSE, modelmatrix);
 
 	/* Make our background black */
-	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClearColor(0.0, 0.0, 0.3, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	foo->draw(NULL);
 	/* Invoke glDrawArrays telling that our data consists of individual triangles */
-	glDrawArrays(GL_TRIANGLES, 0, 12);
-
 	/* Swap our buffers to make our changes visible */
 	SDL_GL_SwapWindow(window);
-
-	/* Sleep for roughly 33 milliseconds between frames */
-	//SDL_Delay(33);
 }
 
 void destroywindow(SDL_WindowID window, SDL_GLContext context) {
@@ -195,8 +104,6 @@ int main(int argc, char *argv[]) {
 	setupwindow(&mainwindow, &maincontext, 800, 1280);
 
 	/* Call our function that performs opengl operations */
-	//std::cout<<SDL_QUIT<<std::endl;
-	foo = new Obj("t270.eob");
 	setupSzene(mainwindow);
 	bool handled = true;
 	while(handled) {

@@ -17,6 +17,7 @@ class Obj {
 	private:
 		bool shaderCreated;
 		bool geo;
+		GLuint vertexCount;
 		GLuint shaderProgram;
 		GLuint vao, vbo[3];
 		std::string objFile;
@@ -31,5 +32,6 @@ class Obj {
 		~Obj();
 		void draw(GLfloat *projection);
 		GLuint getShaderHandle();
+		GLuint getVertexCount();
 };
 #endif		

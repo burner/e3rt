@@ -75,19 +75,21 @@ void Obj::draw(GLfloat *projection) {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+
 		//Vertex
 		glBufferData(GL_ARRAY_BUFFER, obj->getVertexArraySize(), obj->getVertexArray(), GL_STATIC_DRAW);
-		glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FLOAT,0,0);
+		glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE,0,0);
 		glEnableVertexAttribArray(0);
+		vertexCount = obj->getVertexArraySize();
 
 		//Normal
 		glBufferData(GL_ARRAY_BUFFER, obj->getNormalArraySize(), obj->getNormalArray(), GL_STATIC_DRAW);
-		glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FLOAT,0,0);
+		glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE,0,0);
 		glEnableVertexAttribArray(1);
 		
 		//TexCoord
 		glBufferData(GL_ARRAY_BUFFER, obj->getTextureArraySize(), obj->getTextureArray(), GL_STATIC_DRAW);
-		glVertexAttribPointer((GLuint)2, 2, GL_FLOAT, GL_FLOAT,0,0);
+		glVertexAttribPointer((GLuint)2, 2, GL_FLOAT, GL_FALSE,0,0);
 		glEnableVertexAttribArray(2);
 
 		//read shader source
@@ -141,11 +143,13 @@ void Obj::draw(GLfloat *projection) {
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+	glDrawArrays(GL_TRIANGLES,0,vertexCount);
 }
 
 GLuint Obj::getShaderHandle() {
 	return shaderProgram;
+}
+
+GLuint Obj::getVertexCount() {
+	return vertexCount;
 }
