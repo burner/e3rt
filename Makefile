@@ -1,7 +1,7 @@
 CC=g++
 LD=g++
-CFLAGS=-ggdb -Wall -O3
-LDFLAGS=-ggdb -Wall -lGL$(/usr/local/sdl-1.3/bin/sdl-config --cflags --libs) 
+CFLAGS=-ggdb -Wall -O3 -std=gnu++0x
+LDFLAGS=-ggdb -Wall -lGL$(/usr/local/sdl-1.3/bin/sdl-config --cflags --libs) -lncurses -std=gnu++0x
 TARGET=e3rt
 
 OBJS=main.o ShaderHandle.o vec3f.o tri.o ObjLoader.o Timer.o utils.o Obj.o vec2f.o tinyxml.o tinyxmlerror.o tinyxmlparser.o
@@ -17,7 +17,6 @@ $(TARGET) : $(OBJS)
 clean:
 	rm -f *.o $(TARGET)
 
-Femto.o: Femto.cpp Femto.h
 Node.o:	Node.cpp Node.h
 ShaderHandle.o: ShaderHandle.cpp ShaderHandle.h
 Timer.o: Timer.cpp Timer.h

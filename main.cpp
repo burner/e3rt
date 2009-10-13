@@ -21,11 +21,16 @@ void setupwindow(SDL_WindowID *window, SDL_GLContext *context, int height, int w
 	}	
 	*context = SDL_GL_CreateContext(*window);
 
-	SDL_GL_SetSwapInterval(1);
+	//SDL_GL_SetSwapInterval(1);
 	glCullFace(GL_BACK);
 	glFrontFace(GL_CW);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+	Timer::createTimer("fpsTicks");
+
+	//curses
+	initscr();
+	curs_set(0);
 }
 
 void setupSzene() {
@@ -37,14 +42,14 @@ void drawscene(SDL_WindowID window) {
 	GLfloat modelmatrix[16];
 	const GLfloat identitymatrix[16] = IDENTITY_MATRIX4; 
 
-	perspective(projectionmatrix, 45.0, 1.0, 0.1, 100.0);
+	perspective(projectionmatrix, 90.0, 1.0, 0.1, 100.0);
 	
-	i = (i+1)%360;
+	i = (i+0.01);
 	memcpy(modelmatrix, identitymatrix, sizeof(GLfloat) * 16);
-	//rotate(modelmatrix, (GLfloat)i * -1.0, X_AXIS);
-	//rotate(modelmatrix, (GLfloat)i * 1.0, Y_AXIS);
-	//rotate(modelmatrix, (GLfloat)i * 0.5, Z_AXIS);
-	translate(modelmatrix, 0, 0, -8.0);
+	rotate(modelmatrix, i * -1.0, X_AXIS);
+	rotate(modelmatrix, i * 1.0, Y_AXIS);
+	rotate(modelmatrix, i * 0.5, Z_AXIS);
+	translate(modelmatrix, 0, 0, -4.0);
 
 	multiply4x4(modelmatrix, projectionmatrix);
 
@@ -61,39 +66,49 @@ void destroywindow(SDL_WindowID window, SDL_GLContext context) {
 	SDL_GL_DeleteContext(context);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
-}
-
-bool handleEvents() {
-	SDL_Event event;
-	while(SDL_PollEvent(&event)) {
-		switch(event.type) {
-			case SDL_KEYDOWN:
-				std::cout<<SDL_GetKeyName(event.key.keysym.sym)<<" KEYDOWN"<<std::endl;
-				break;
-			case SDL_KEYUP:
-				std::cout<<SDL_GetKeyName(event.key.keysym.sym)<<" KEYUP"<<std::endl;
-				break;
-			case SDL_QUIT:
-				return false;
-		}
-	}
-	return true;
+	endwin();
 }
 
 int main(int argc, char *argv[]) {
 	foo = NULL;
 	SDL_WindowID mainwindow;
 	SDL_GLContext maincontext;
-
+	
 	setupwindow(&mainwindow, &maincontext, 800, 1280);
-
 	setupSzene();
-	bool handled = true;
-	while(handled) {
-		handled = handleEvents();
-		//std::cout<<handled<<std::endl;
+	while(handle()) {
 		drawscene(mainwindow);
+		if(Timer::read("fpsTicks") >= 1000) {
+			Timer::reset("fpsTicks");
+			fps = frames;
+			frames = 0;
+		} else {
+			frames++;
+		}
+		mvprintw(1,1, "FPS: %d", fps);
+		refresh();
 	}
 	destroywindow(mainwindow, maincontext);
 	return 0;
+}
+
+bool handle() {
+	bool result = true;
+	SDL_Event event;
+    while(SDL_PollEvent(&event)) {
+        switch(event.type) {
+            case SDL_QUIT:
+                result = false;
+                break;
+            case SDL_KEYDOWN:
+                //std::cout<<SDL_GetKeyName(event.key.keysym.sym)<<" KEYDOWN"<<std::endl;
+                break;
+            case SDL_KEYUP:
+                if(event.key.keysym.sym == SDLK_ESCAPE) {
+                    result = false;
+                }
+                break;
+        }
+    }
+	return result;
 }
