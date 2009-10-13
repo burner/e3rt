@@ -34,4 +34,6 @@ void translate(GLfloat *matrix, GLfloat x, GLfloat y, GLfloat z);
 /* Rotate a matrix by an angle on a X, Y, or Z axis specified by the AXIS enum*/
 void rotate(GLfloat *matrix, GLfloat angle, AXIS axis);
 
+void printVertexArray(GLfloat** p);
+
 #endif /* #ifndef _UTILS_H_ */

@@ -7,12 +7,16 @@ Femto::Femto(std::string *filename) {
 	if(!ifs) {
 		return;
 	}
+	
+	std::cout<<"filename in femto "<<*(this->filename)<<std::endl;	
+
 	std::string line;
-	std::stack<Node*> *ele = new std::stack<Node*>();
+	std::stack<Node*> ele;
 
 	this->root = NULL;
 
 	while(getline(ifs, line)) {
+		//std::cout<<"femto line "<<line<<std::endl;
 		std::string *tmp = new std::string;
 		unsigned i = 0;
 		while(line[i] == ' ' || line[i] == '\t') i++;
@@ -20,24 +24,23 @@ Femto::Femto(std::string *filename) {
 			tmp->push_back(line.at(i));
 		}
 		if(tmp->at(1) == '/') {
-			ele->pop();
+			ele.pop();
 			continue;
 		}
 		Node *node = makeNode(tmp);
 		if(line[i-1] == '>' && this->root == NULL) {
 			this->root = node;
-			ele->push(node);
+			ele.push(node);
 			continue;
 		}
 		if(line[i-1] == '>' && line[i-2] == '/') {
-			ele->top()->addChild(node);
+			ele.top()->addChild(node);
 			continue;
 		} else {
-			ele->top()->addChild(node);
-			ele->push(node);
+			ele.top()->addChild(node);
+			ele.push(node);
 		}
 	}
-	delete(ele);
 	line.clear();
 	ifs.close();
 }

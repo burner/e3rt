@@ -4,198 +4,254 @@
 #include <stdlib.h>
 
 ObjLoader::ObjLoader(std::string filename) {
-	vectors = new std::vector<vec3f*>();
-	triangle = new std::vector<tri*>();
-	normals = new std::vector<vec3f*>();
-	texture = new std::vector<vec2f*>();
-	
+	vec = NULL;
+	nor = NULL;
+	tex = NULL;
+	col = NULL;
 	//open file
 	std::ifstream ifs(filename.c_str());
 	std::string temp;
+	//std::cout<<"Objloader filename "<<filename<<std::endl;
 	while(getline(ifs, temp)) {
 		//debug
-		//cout<<temp<<endl;
+		//std::cout<<temp<<std::endl;
 		parseStr(temp);
 	}
+	makeVertexArray();
+	makeNormalArray();
+	makeTextureArray();
+	makeColorArray();
+	floatCount = vectors.size()*3;
 }
 
 void ObjLoader::parseStr(std::string line) {
 	if (line.at(0) == 'v') {
 		if (line.at(1) == ' ') {
+			//std::cout<<"Vertex Line"<<std::endl;
 			readVertexLine(line);
 		}
 		if (line.at(1) == 'n') {
+			//std::cout<<"Normal Line"<<std::endl;
 			readVertexNormalLine(line);
 		}
 		if (line.at(1) == 't') {
+			//std::cout<<"Tex Line"<<std::endl;
 			readVertexTexCoordLine(line);
 		}
 	} else if (line.at(0) == 'f') {
+		//std::cout<<"Face Line"<<std::endl;
 		readFaceLine(line);
 	}
 }
 
 void ObjLoader::readVertexLine(std::string line) {
-	std::string tmp[3];
+	std::stringstream tmp[3];
+	GLfloat v[3];
 	int j = 0;
 	for(unsigned i = 2; i < line.length() && j < 3; i++) {
 		if(line.at(i) == ' ') {
 			j++;
 			continue;
 		}
-		tmp[j].push_back(line.at(i));
+		tmp[j]<<(line.at(i));
 	}
-	vectors->push_back(new vec3f(
-		(float)atof(tmp[0].c_str()),
-		(float)atof(tmp[1].c_str()),
-		(float)atof(tmp[2].c_str())));
+	tmp[0]>>v[0];	
+	tmp[1]>>v[1];
+	tmp[2]>>v[2];
+	//std::cout<<"x "<<v[0]<<" y "<<v[1]<<" z "<<v[2]<<std::endl;
+	vectors.push_back(new vec3f(v[0], v[1], v[2]));
 }
 
 void ObjLoader::readVertexNormalLine(std::string line) {
-	std::string tmp[3];
+	std::stringstream tmp[3];
+	GLfloat v[3];
 	unsigned j = 0;
 	for(unsigned i = 3; i < line.length() && j < 3; i++) {
 		if(line.at(i) == ' ') {
 			j++;
 			continue;
 		}
-		tmp[j].push_back(line.at(i));
+		tmp[j]<<(line.at(i));
 	}
-	normals->push_back(new vec3f(
-		(float)atof(tmp[0].c_str()),
-		(float)atof(tmp[1].c_str()),
-		(float)atof(tmp[2].c_str())));
+	tmp[0]>>v[0];	
+	tmp[1]>>v[1];
+	tmp[2]>>v[2];
+	//std::cout<<"x "<<v[0]<<" y "<<v[1]<<" z "<<v[2]<<std::endl;
+	normals.push_back(new vec3f(v[0], v[1], v[2]));
 }
 
 void ObjLoader::readVertexTexCoordLine(std::string line) {
-	std::string tmp[2];
+	std::stringstream tmp[2];
+	GLfloat v[2];
 	unsigned j = 0;
 	for(unsigned i = 3; i < line.length() && j < 2; i++) {
 		if(line.at(i) == ' ') {
 			j++;
 			continue;
 		}
-		tmp[j].push_back(line.at(i));
+		tmp[j]<<(line.at(i));
 	}
-	texture->push_back(new vec2f(
-		(float)atof(tmp[0].c_str()),
-		(float)atof(tmp[1].c_str())));
+	tmp[0]>>v[0];	
+	tmp[1]>>v[1];
+	//std::cout<<"x "<<v[0]<<" y "<<v[1]<<std::endl;
+	texture.push_back(new vec2f(v[0], v[1]));
 }
 
 void ObjLoader::readFaceLine(std::string line) {
-	std::string tmp[9];
+	std::stringstream tmp[9];
+	int f[9];
 	unsigned j = 0;
 	for(unsigned i = 2; i < line.length() && j < 9; i++) {
 		//if blank set pointer to next array entry and continue
-		if(line.at(i) == ' ') {
+		if(line.at(i) == ' ' || line.at(i) == '/') {
 			j++;
 			continue;
 		}
-		//if / set pointer to next array entry and continue
-		if(line.at(i) == '/') {
-			j++;
-			continue;
-		}
-		tmp[j].push_back(line.at(i));
+		tmp[j]<<(line.at(i));
 	}
-	triangle->push_back(new tri(atoi(tmp[0].c_str())-1,
-								atoi(tmp[1].c_str())-1,
-								atoi(tmp[2].c_str())-1,
-								atoi(tmp[3].c_str())-1,
-								atoi(tmp[4].c_str())-1,
-								atoi(tmp[5].c_str())-1,
-								atoi(tmp[6].c_str())-1,
-								atoi(tmp[7].c_str())-1,
-								atoi(tmp[8].c_str())-1
-								));
+	tmp[0]>>f[0]; f[0]--;
+	tmp[1]>>f[1]; f[1]--;
+	tmp[2]>>f[2]; f[2]--;
+	tmp[3]>>f[3]; f[3]--;
+	tmp[4]>>f[4]; f[4]--;
+	tmp[5]>>f[5]; f[5]--;
+	tmp[6]>>f[6]; f[6]--;
+	tmp[7]>>f[7]; f[7]--;
+	tmp[8]>>f[8]; f[8]--;
+	//std::cout<<f[0]<<" "<<f[1]<<" "<<f[2]<<" "<<f[3]<<" "<<f[4]<<" "<<f[5]<<" "<<f[6]<<" "<<f[7]<<" "<<f[8]<<std::endl;;	
+	triangle.push_back(new tri(f[0],f[1],f[2],f[3],f[4],f[5],f[6],f[7],f[8]));	
 }
 
-std::vector<vec3f*>* ObjLoader::getVertices() {
+std::vector<vec3f*> ObjLoader::getVertices() {
 	return vectors;
 }
 
-std::vector<tri*>* ObjLoader::getTriangle() {
+std::vector<tri*> ObjLoader::getTriangle() {
 	return triangle;
 }
 
-std::vector<vec3f*>* ObjLoader::getNormals() {
+std::vector<vec3f*> ObjLoader::getNormals() {
 	return normals;
 }
 
-GLfloat** ObjLoader::getVertexArray() {
-	GLfloat **tmp = new GLfloat*[triangle->size()*3];
+void ObjLoader::makeVertexArray() {
+	unsigned triSize = triangle.size();
+	vSize = triSize * 3 * 3;
+	this->vec = new GLfloat[triSize*3*3];
 	unsigned j = 0;
-	for(unsigned i = 0; i < triangle->size(); i++) {
-		tmp[j] = new GLfloat[3];
-		tmp[j][0] = (*this->vectors)[(*triangle)[i]->x1]->x;
-		tmp[j][1] = (*this->vectors)[(*triangle)[i]->x1]->y;
-		tmp[j][2] = (*this->vectors)[(*triangle)[i]->x1]->z;
+	for(unsigned i = 0; i < triSize; i++) {
+		this->vec[j] = vectors.at(triangle.at(i)->x1)->x;
 		j++;
-		tmp[j] = new GLfloat[3];
-		tmp[j][0] = (*this->vectors)[(*triangle)[i]->y1]->x;
-		tmp[j][1] = (*this->vectors)[(*triangle)[i]->y1]->y;
-		tmp[j][2] = (*this->vectors)[(*triangle)[i]->y1]->z;
+		this->vec[j] = vectors.at(triangle.at(i)->x1)->y;
 		j++;
-		tmp[j] = new GLfloat[3];
-		tmp[j][0] = (*this->vectors)[(*triangle)[i]->z1]->x;
-		tmp[j][1] = (*this->vectors)[(*triangle)[i]->z1]->y;
-		tmp[j][2] = (*this->vectors)[(*triangle)[i]->z1]->z;
+		this->vec[j] = vectors.at(triangle.at(i)->x1)->z;
+		j++;
+
+		this->vec[j] = vectors.at(triangle.at(i)->y1)->x;
+		j++;
+		this->vec[j] = vectors.at(triangle.at(i)->y1)->y;
+		j++;
+		this->vec[j] = vectors.at(triangle.at(i)->y1)->z;
+		j++;
+
+		this->vec[j] = vectors.at(triangle.at(i)->z1)->x;
+		j++;
+		this->vec[j] = vectors.at(triangle.at(i)->z1)->y;
+		j++;
+		this->vec[j] = vectors.at(triangle.at(i)->z1)->z;
+		j++;
+	} 
+}
+
+void ObjLoader::makeNormalArray() {
+	unsigned triSize = triangle.size();
+	nSize = triSize * 3 * 3;
+	this->nor = new GLfloat[triSize*3*3];
+	unsigned j = 0;
+	for(unsigned i = 0; i < triSize; i++) {
+		this->nor[j] = normals.at(triangle.at(i)->x3)->x;
+		j++;
+		this->nor[j] = normals.at(triangle.at(i)->x3)->y;
+		j++;
+		this->nor[j] = normals.at(triangle.at(i)->x3)->z;
+		j++;
+
+		this->nor[j] = normals.at(triangle.at(i)->y3)->x;
+		j++;
+		this->nor[j] = normals.at(triangle.at(i)->y3)->y;
+		j++;
+		this->nor[j] = normals.at(triangle.at(i)->y3)->z;
+		j++;
+
+		this->nor[j] = normals.at(triangle.at(i)->z3)->x;
+		j++;
+		this->nor[j] = normals.at(triangle.at(i)->z3)->y;
+		j++;
+		this->nor[j] = normals.at(triangle.at(i)->z3)->z;
 		j++;
 	}
-	return tmp;
-}
+} 
 
-GLfloat** ObjLoader::getNormalArray() {
-	GLfloat **tmp = new GLfloat*[triangle->size()*3];
+void ObjLoader::makeTextureArray() {
+	unsigned triSize = triangle.size();
+	tSize = triSize * 3 * 2;
+	this->tex = new GLfloat[triSize*3*2];
 	unsigned j = 0;
-	for(unsigned i = 0; i < triangle->size(); i++) {
-		tmp[j] = new GLfloat[3];
-		tmp[j][0] = (*this->normals)[(*triangle)[i]->x3]->x;
-		tmp[j][1] = (*this->normals)[(*triangle)[i]->x3]->y;
-		tmp[j][2] = (*this->normals)[(*triangle)[i]->x3]->z;
+	for(unsigned i = 0; i < triSize; i++) {
+		this->tex[j] = texture.at(triangle.at(i)->x2)->x;
 		j++;
-		tmp[j] = new GLfloat[3];
-		tmp[j][0] = (*this->normals)[(*triangle)[i]->y3]->x;
-		tmp[j][1] = (*this->normals)[(*triangle)[i]->y3]->y;
-		tmp[j][2] = (*this->normals)[(*triangle)[i]->y3]->z;
+		this->tex[j] = texture.at(triangle.at(i)->x2)->y;
 		j++;
-		tmp[j] = new GLfloat[3];
-		tmp[j][0] = (*this->normals)[(*triangle)[i]->z3]->x;
-		tmp[j][1] = (*this->normals)[(*triangle)[i]->z3]->y;
-		tmp[j][2] = (*this->normals)[(*triangle)[i]->z3]->z;
+
+		this->tex[j] = texture.at(triangle.at(i)->y2)->x;
+		j++;
+		this->tex[j] = texture.at(triangle.at(i)->y2)->y;
+		j++;
+
+		this->tex[j] = texture.at(triangle.at(i)->z2)->x;
+		j++;
+		this->tex[j] = texture.at(triangle.at(i)->z2)->y;
 		j++;
 	}
-	return tmp;
 }
 
-GLfloat** ObjLoader::getTextureArray() {
-	GLfloat **tmp = new GLfloat*[triangle->size()*3];
-	unsigned j = 0;
-	for(unsigned i = 0; i < triangle->size(); i++) {
-		tmp[j] = new GLfloat[3];
-		tmp[j][0] = (*this->texture)[(*triangle)[i]->x2]->x;
-		tmp[j][1] = (*this->texture)[(*triangle)[i]->x2]->y;
-		j++;
-		tmp[j] = new GLfloat[3];
-		tmp[j][0] = (*this->texture)[(*triangle)[i]->y2]->x;
-		tmp[j][1] = (*this->texture)[(*triangle)[i]->y2]->y;
-		j++;
-		tmp[j] = new GLfloat[3];
-		tmp[j][0] = (*this->texture)[(*triangle)[i]->z2]->x;
-		tmp[j][1] = (*this->texture)[(*triangle)[i]->z2]->y;
-		j++;
+void ObjLoader::makeColorArray() {
+	unsigned triSize = triangle.size()*3*3;
+	this->col = new GLfloat[triSize];
+	for(unsigned i = 0; i < triSize; i++) {
+		this->col[i] =(GLfloat) (rand()/(float(RAND_MAX)+1));
+		//std::cout<<this->col[i]<<" ";
 	}
-	return tmp;
 }
 
-int ObjLoader::getVertexArraySize() {
-	return triangle->size()*3*sizeof(GLfloat);
+void ObjLoader::printVertexArray() {
+	for(int i = 0; i < vSize; i+=9) {
+		std::cout<<vec[i]<<" "<<vec[i+1]<<" "<<vec[i+2]<<"\t\t";
+		std::cout<<vec[i+3]<<" "<<vec[i+4]<<" "<<vec[i+5]<<"\t\t";
+		std::cout<<vec[i+6]<<" "<<vec[i+7]<<" "<<vec[i+8]<<std::endl;
+	}
+}	
+
+void ObjLoader::printNormalArray() {
+	for(int i = 0; i < vSize; i+=9) {
+		std::cout<<nor[i]<<" "<<nor[i+1]<<" "<<nor[i+2]<<"\t\t";
+		std::cout<<nor[i+3]<<" "<<nor[i+4]<<" "<<nor[i+5]<<"\t\t";
+		std::cout<<nor[i+6]<<" "<<nor[i+7]<<" "<<nor[i+8]<<std::endl;
+	}
 }
 
-int ObjLoader::getNormalArraySize() {
-	return normals->size()*3*sizeof(GLfloat);
+void ObjLoader::printTextureArray() {
+	for(int i = 0; i < vSize; i+=6) {
+		std::cout<<nor[i]<<" "<<nor[i+1]<<"\t\t";
+		std::cout<<nor[i+2]<<" "<<nor[i+3]<<"\t\t";
+		std::cout<<nor[i+4]<<" "<<nor[i+5]<<std::endl;
+	}
 }
 
-int ObjLoader::getTextureArraySize() {
-	return texture->size()*2*sizeof(GLfloat);
+void ObjLoader::printColorArray() {
+	for(int i = 0; i < vSize; i+=9) {
+		std::cout<<col[i]<<" "<<col[i+1]<<" "<<col[i+2]<<"\t\t";
+		std::cout<<col[i+3]<<" "<<col[i+4]<<" "<<col[i+5]<<"\t\t";
+		std::cout<<col[i+6]<<" "<<col[i+7]<<" "<<col[i+8]<<std::endl;
+	}
 }

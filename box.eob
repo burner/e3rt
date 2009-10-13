@@ -1,3 +1,4 @@
+<?xml version="1.0" ?>
 <Obj name="box">
 	<ObjFile fileName="box.obj"/>
 	<Shader Vertex="shader.vert" Fragment="shader.frag"/>

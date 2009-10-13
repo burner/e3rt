@@ -13,6 +13,8 @@
 #include "utils.h"
 #include "Obj.h"
 #include "ShaderHandle.h"
+#define TIXML_USE_STL
+#include "tinyxml.h"
 
 #define PROGRAM_NAME "e3rt"
 
@@ -23,7 +25,7 @@ Obj *foo;
 
 void setupwindow(SDL_WindowID *window, SDL_GLContext *context, int height, int width);
 void drawscene(SDL_WindowID window); 
-void setupSzene(SDL_WindowID window);
+void setupSzene();
 void destroywindow(SDL_WindowID window, SDL_GLContext context);
 bool handleEvents();
 int main(int argc, char *argv[]);

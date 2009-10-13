@@ -1,18 +1,20 @@
 #include "vec3f.h"
 #include "vec2f.h"
 #include "tri.h"
+#include <cstdlib>
 #include <vector>
 #include <string>
+#include <sstream>
 #define GL3_PROTOTYPES 1
 #include <GL3/gl3.h>
 #ifndef OBJLOADER
 #define OBJLOADER
 class ObjLoader {
 	private:
-		std::vector<vec3f*> *vectors;
-		std::vector<tri*> *triangle;
-		std::vector<vec3f*> *normals;
-		std::vector<vec2f*> *texture;
+		std::vector<vec3f*> vectors;
+		std::vector<tri*> triangle;
+		std::vector<vec3f*> normals;
+		std::vector<vec2f*> texture;
 		
 		void parseStr(std::string line);
 		void readVertexLine(std::string line);
@@ -20,17 +22,27 @@ class ObjLoader {
 		void readVertexTexCoordLine(std::string line);
 		void readFaceLine(std::string line);
 
-	public:
-		ObjLoader(std::string filename);
-		std::vector<vec3f*>* getVertices();
-		std::vector<tri*>* getTriangle();
-		std::vector<vec3f*>* getNormals();
+		void makeVertexArray();
+		void makeNormalArray();
+		void makeTextureArray();
+		void makeColorArray();
 
-		GLfloat** getVertexArray();
-		int getVertexArraySize();	
-		GLfloat** getTextureArray();
-		int getTextureArraySize();	
-		GLfloat** getNormalArray();
-		int getNormalArraySize();	
+	public:
+		GLfloat *vec;
+		GLfloat *nor;
+		GLfloat *tex;
+		GLfloat *col;
+		int vSize, nSize, tSize;
+		int floatCount;
+
+		ObjLoader(std::string filename);
+		std::vector<vec3f*> getVertices();
+		std::vector<tri*> getTriangle();
+		std::vector<vec3f*> getNormals();
+
+		void printVertexArray();
+		void printNormalArray();
+		void printTextureArray();
+		void printColorArray();
 };
 #endif

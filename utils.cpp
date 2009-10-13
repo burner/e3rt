@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <iostream>
 #define GL3_PROTOTYPES 1
 #include <GL3/gl3.h>
 #include <SDL-1.3/SDL.h>
@@ -65,4 +66,11 @@ void rotate(GLfloat *matrix, GLfloat angle, AXIS axis) {
 	newmatrix[cos2[axis]] = newmatrix[cos1[axis]];
 
 	multiply4x4(matrix, newmatrix);
+}
+
+void printVertexArray(GLfloat** p) {
+	int len = (int)(sizeof(p)/(3*sizeof(GLfloat)));
+	for(int i = 0; i < len; i++) {
+		std::cout<<p[i][0]<<" "<<p[i][1]<<" "<<p[i][2]<<std::endl;
+	}
 }
