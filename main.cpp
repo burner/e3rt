@@ -38,22 +38,15 @@ void setupSzene() {
 }
 
 void drawscene(SDL_WindowID window) {
-	GLfloat projectionmatrix[16];
-	GLfloat modelmatrix[16];
-	const GLfloat identitymatrix[16] = IDENTITY_MATRIX4; 
+	i = (i+0.05f);
+	glm::mat4 Projection = glm::perspective(45.0f, (GLfloat)width/(GLfloat)height, 0.1f, 100.0f);
+	glm::mat4 ViewTranslate = glm::translate(0.0f,0.0f,-4.0f);
+	glm::mat4 ViewRotateX = glm::rotate(i, glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::mat4 ViewRotateY = glm::rotate(0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 ViewRotateZ = glm::rotate(45.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::mat4 View = ViewTranslate * ViewRotateX * ViewRotateY * ViewRotateZ;
 
-	perspective(projectionmatrix, 90.0, 1.0, 0.1, 100.0);
-	
-	i = (i+0.01);
-	memcpy(modelmatrix, identitymatrix, sizeof(GLfloat) * 16);
-	rotate(modelmatrix, i * -1.0, X_AXIS);
-	rotate(modelmatrix, i * 1.0, Y_AXIS);
-	rotate(modelmatrix, i * 0.5, Z_AXIS);
-	translate(modelmatrix, 0, 0, -4.0);
-
-	multiply4x4(modelmatrix, projectionmatrix);
-
-	glUniformMatrix4fv(glGetUniformLocation(foo->getShaderHandle(), "mvpmatrix"), 1, GL_FALSE, modelmatrix);
+	glUniformMatrix4fv(glGetUniformLocation(foo->getShaderHandle(), "mvpmatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
 
 	glClearColor(0.0, 0.0, 0.3, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -74,7 +67,7 @@ int main(int argc, char *argv[]) {
 	SDL_WindowID mainwindow;
 	SDL_GLContext maincontext;
 	
-	setupwindow(&mainwindow, &maincontext, 800, 1280);
+	setupwindow(&mainwindow, &maincontext, height, width);
 	setupSzene();
 	while(handle()) {
 		drawscene(mainwindow);

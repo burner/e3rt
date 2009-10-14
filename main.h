@@ -20,14 +20,22 @@
 #define TIXML_USE_STL
 #include "tinyxml.h"
 
+
+//matrix
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_projection.hpp"
+#include "glm/gtx/type_ptr.hpp"
+#include "glm/GLM_GTX_transform.h"
+
 #define PROGRAM_NAME "e3rt"
 
 GLfloat i = 0;
 GLuint shader;
 
-
 Obj *foo;
 
+int width = 1200;
+int height = 800;
 int fps;
 int frames;
 bool result;

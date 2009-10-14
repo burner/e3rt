@@ -12,6 +12,7 @@ class vec3f {
 		GLfloat z;
 
 		vec3f(GLfloat x_n, GLfloat y_n, GLfloat z_n);
+		vec3f();
 
 		//addition subtraction
 		vec3f* operator+ (const vec3f &second);

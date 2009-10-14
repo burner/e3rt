@@ -6,6 +6,12 @@ vec3f::vec3f(GLfloat x_n, GLfloat y_n, GLfloat z_n) {
 	z = z_n;
 }
 
+vec3f::vec3f() {
+	x = 0.0f;
+	y = 0.0f;
+	z = 0.0f;
+}
+
 vec3f* vec3f::operator+ (const vec3f &second) {
 	return new vec3f(x+second.x, y+second.y, z+second.z);
 }
