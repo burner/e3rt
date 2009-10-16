@@ -79,6 +79,8 @@ int main(int argc, char *argv[]) {
 			frames++;
 		}
 		mvprintw(1,1, "FPS: %d", fps);
+		mvprintw(2,1, "Mousemiddle  X = %d : Y = %d", tCam.getMiddleX(), tCam.getMiddleY());
+		mvprintw(3,1, "Mousecurrent X = %d : Y = %d", tCam.getCurrentX(), tCam.getCurrentY());
 		refresh();
 	}
 	destroywindow(mainwindow, maincontext);
@@ -101,6 +103,27 @@ bool handle() {
                     result = false;
                 }
                 break;
+			//MOUSEBUTTONDOWN is MOUSEMOTION
+			case SDL_MOUSEBUTTONDOWN:
+				int x, y;
+				SDL_GetMouseState(0,&x, &y);
+				tCam.setCurrent(x,y);
+				if(event.button.button == SDL_BUTTON_MIDDLE) {
+					if(!tCam.getMiddleState()) {
+						tCam.setMiddle(x,y);
+					}
+				}
+				break;
+			//MOUSEBUTTONUP is MOUSEBUTTONDOWN
+			case SDL_MOUSEBUTTONUP:
+				std::cout<<"MouseDOWN"<<std::endl;
+				if(event.button.button == SDL_BUTTON_MIDDLE) {
+					tCam.unsetMiddle();
+				}
+				break;
+			case SDL_MOUSEMOTION:
+				std::cout<<"MouseUP"<<std::endl;
+				break;
         }
     }
 	return result;

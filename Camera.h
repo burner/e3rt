@@ -9,6 +9,10 @@
 #ifndef CAMERA
 #define CAMERA
 class Camera {
+	private:
+		bool mChange;
+		int mX, mY;
+		int cX, cY;
 	public:
 		glm::mat4 Proj;
 		glm::mat4 View;
@@ -17,5 +21,13 @@ class Camera {
 		vec3f::vec3f rot;
 		Camera(float angle, float near, float far, int width, int height);
 		void placeCam();
+		void setMiddle(int x, int y);
+		void setCurrent(int x, int y);
+		void unsetMiddle();
+		bool getMiddleState();
+		int getMiddleX();
+		int getMiddleY();
+		int getCurrentX();
+		int getCurrentY();
 };
 #endif

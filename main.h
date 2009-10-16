@@ -20,6 +20,7 @@
 #define TIXML_USE_STL
 #include "tinyxml.h"
 
+#include "Camera.h"
 
 //matrix
 #include "glm/glm.hpp"
@@ -36,9 +37,11 @@ Obj *foo;
 
 int width = 1200;
 int height = 800;
+float angle = 45.0f;
 int fps;
 int frames;
 bool result;
+Camera tCam(angle, 0.1f, 100.0f, width, height);
 
 void setupwindow(SDL_WindowID *window, SDL_GLContext *context, int height, int width);
 void drawscene(SDL_WindowID window); 

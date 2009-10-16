@@ -10,7 +10,7 @@ OBJS=main.o ShaderHandle.o vec3f.o tri.o ObjLoader.o Timer.o Obj.o vec2f.o tinyx
 all: $(TARGET)
 
 $(TARGET) : $(OBJS)
-	$(LD) $(LDFLAGS) -Wall *.o $(LIBS) -o $(TARGET) $(shell /usr/local/sdl-1.3/bin/sdl-config --cflags --libs)
+	$(LD) $(LDFLAGS) -Wall $(OBJS) $(LIBS) -o $(TARGET) $(shell /usr/local/sdl-1.3/bin/sdl-config --cflags --libs)
 
 .cpp.o:
 	$(CC) $(CFLAGS) -c $<
