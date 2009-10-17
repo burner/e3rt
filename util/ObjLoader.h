@@ -1,6 +1,6 @@
-#include "vec3f.h"
-#include "vec2f.h"
-#include "tri.h"
+#include "../prim/vec3f.h"
+#include "../prim/vec2f.h"
+#include "../prim/tri.h"
 #include <cstdlib>
 #include <vector>
 #include <string>
