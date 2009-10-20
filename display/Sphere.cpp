@@ -46,8 +46,21 @@ Sphere::Sphere() {
 	riData = new GLfloat[(k-1)*(k-1)*2*9]; riColor = new GLfloat[(k-1)*(k-1)*2*9];
 	toData = new GLfloat[(k-1)*(k-1)*2*9]; toColor = new GLfloat[(k-1)*(k-1)*2*9];
 	boData = new GLfloat[(k-1)*(k-1)*2*9]; boColor = new GLfloat[(k-1)*(k-1)*2*9];
+	unsigned h = 0;
 	for(unsigned i = 0; i < (k-1); i++) {
 		for(unsigned j = 0; j < (k-1); j++) {
+			//first TRI first VEC Pos
+			frData[h] = Fr[i][j]->x; baData[h] = Ba[i][j]->x; leData[h] = Le[i][j]->x;
+			riData[h] = Ri[i][j]->x; toData[h] = To[i][j]->x; boData[h] = Bo[i][j]->x;
+			h++;
+			//first TRI second VEC Pos
+			frData[h] = Fr[i+1][j]->x; baData[h] = Ba[i+1][j]->x; leData[h] = Le[i+1][j]->x;
+			riData[h] = Ri[i+1][j]->x; toData[h] = To[i+1][j]->x; boData[h] = Bo[i+1][j]->x;
+			h++
+			//first TRI third VEC Pos
+			frData[h] = Fr[i][j+1]->x; baData[h] = Ba[i][j+1]->x; leData[h] = Le[i][j+1]->x;
+			riData[h] = Ri[i][j+1]->x; toData[h] = To[i][j+1]->x; boData[h] = Bo[i][j+1]->x;
+			h++;
 		}
 	}	
 }
