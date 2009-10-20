@@ -17,7 +17,8 @@ Sphere::Sphere() {
 	Le = new vec3f** [k];
 	To = new vec3f** [k];
 	Bo = new vec3f** [k];
-		
+	
+	//create verticies	
 	for(unsigned i = 0; i < k; i++) {
 		Fr[i] = new vec3f* [k];
 		Ba[i] = new vec3f* [k];
@@ -37,4 +38,16 @@ Sphere::Sphere() {
 		}
 		m+=step;
 	}
+
+	//create vbo data
+	frData = new GLfloat[(k-1)*(k-1)*2*9]; frColor = new GLfloat[(k-1)*(k-1)*2*9];
+	baData = new GLfloat[(k-1)*(k-1)*2*9]; baColor = new GLfloat[(k-1)*(k-1)*2*9];
+	leData = new GLfloat[(k-1)*(k-1)*2*9]; leColor = new GLfloat[(k-1)*(k-1)*2*9];
+	riData = new GLfloat[(k-1)*(k-1)*2*9]; riColor = new GLfloat[(k-1)*(k-1)*2*9];
+	toData = new GLfloat[(k-1)*(k-1)*2*9]; toColor = new GLfloat[(k-1)*(k-1)*2*9];
+	boData = new GLfloat[(k-1)*(k-1)*2*9]; boColor = new GLfloat[(k-1)*(k-1)*2*9];
+	for(unsigned i = 0; i < (k-1); i++) {
+		for(unsigned j = 0; j < (k-1); j++) {
+		}
+	}	
 }
