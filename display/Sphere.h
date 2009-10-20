@@ -1,4 +1,5 @@
 #include "Obj.h"
+#include <cstdlib>
 #ifndef SPHERE
 #define SPHERE
 class Sphere : Obj {
