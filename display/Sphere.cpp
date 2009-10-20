@@ -53,13 +53,61 @@ Sphere::Sphere() {
 			frData[h] = Fr[i][j]->x; baData[h] = Ba[i][j]->x; leData[h] = Le[i][j]->x;
 			riData[h] = Ri[i][j]->x; toData[h] = To[i][j]->x; boData[h] = Bo[i][j]->x;
 			h++;
+			frData[h] = Fr[i][j]->y; baData[h] = Ba[i][j]->y; leData[h] = Le[i][j]->y;
+			riData[h] = Ri[i][j]->y; toData[h] = To[i][j]->y; boData[h] = Bo[i][j]->y;
+			h++;
+			frData[h] = Fr[i][j]->z; baData[h] = Ba[i][j]->z; leData[h] = Le[i][j]->z;
+			riData[h] = Ri[i][j]->z; toData[h] = To[i][j]->z; boData[h] = Bo[i][j]->z;
+			h++;
 			//first TRI second VEC Pos
 			frData[h] = Fr[i+1][j]->x; baData[h] = Ba[i+1][j]->x; leData[h] = Le[i+1][j]->x;
 			riData[h] = Ri[i+1][j]->x; toData[h] = To[i+1][j]->x; boData[h] = Bo[i+1][j]->x;
 			h++;
+			frData[h] = Fr[i+1][j]->y; baData[h] = Ba[i+1][j]->y; leData[h] = Le[i+1][j]->y;
+			riData[h] = Ri[i+1][j]->y; toData[h] = To[i+1][j]->y; boData[h] = Bo[i+1][j]->y;
+			h++;
+			frData[h] = Fr[i+1][j]->z; baData[h] = Ba[i+1][j]->z; leData[h] = Le[i+1][j]->z;
+			riData[h] = Ri[i+1][j]->z; toData[h] = To[i+1][j]->z; boData[h] = Bo[i+1][j]->z;
+			h++;
 			//first TRI third VEC Pos
 			frData[h] = Fr[i][j+1]->x; baData[h] = Ba[i][j+1]->x; leData[h] = Le[i][j+1]->x;
 			riData[h] = Ri[i][j+1]->x; toData[h] = To[i][j+1]->x; boData[h] = Bo[i][j+1]->x;
+			h++;
+			frData[h] = Fr[i][j+1]->y; baData[h] = Ba[i][j+1]->y; leData[h] = Le[i][j+1]->y;
+			riData[h] = Ri[i][j+1]->y; toData[h] = To[i][j+1]->y; boData[h] = Bo[i][j+1]->y;
+			h++;
+			frData[h] = Fr[i][j+1]->z; baData[h] = Ba[i][j+1]->z; leData[h] = Le[i][j+1]->z;
+			riData[h] = Ri[i][j+1]->z; toData[h] = To[i][j+1]->z; boData[h] = Bo[i][j+1]->z;
+			h++;
+			//second TRI first VEC Pos
+			frData[h] = Fr[i+1][j]->x; baData[h] = Ba[i+1][j]->x; leData[h] = Le[i+1][j]->x;
+			riData[h] = Ri[i+1][j]->x; toData[h] = To[i+1][j]->x; boData[h] = Bo[i+1][j]->x;
+			h++;
+			frData[h] = Fr[i+1][j]->y; baData[h] = Ba[i+1][j]->y; leData[h] = Le[i+1][j]->y;
+			riData[h] = Ri[i+1][j]->y; toData[h] = To[i+1][j]->y; boData[h] = Bo[i+1][j]->y;
+			h++;
+			frData[h] = Fr[i+1][j]->z; baData[h] = Ba[i+1][j]->z; leData[h] = Le[i+1][j]->z;
+			riData[h] = Ri[i+1][j]->z; toData[h] = To[i+1][j]->z; boData[h] = Bo[i+1][j]->z;
+			h++;
+			//second TRI second VEC Pos
+			frData[h] = Fr[i+1][j+1]->x; baData[h] = Ba[i+1][j+1]->x; leData[h] = Le[i+1][j+1]->x;
+			riData[h] = Ri[i+1][j+1]->x; toData[h] = To[i+1][j+1]->x; boData[h] = Bo[i+1][j+1]->x;
+			h++;
+			frData[h] = Fr[i+1][j+1]->y; baData[h] = Ba[i+1][j+1]->y; leData[h] = Le[i+1][j+1]->y;
+			riData[h] = Ri[i+1][j+1]->y; toData[h] = To[i+1][j+1]->y; boData[h] = Bo[i+1][j+1]->y;
+			h++;
+			frData[h] = Fr[i+1][j+1]->z; baData[h] = Ba[i+1][j+1]->z; leData[h] = Le[i+1][j+1]->z;
+			riData[h] = Ri[i+1][j+1]->z; toData[h] = To[i+1][j+1]->z; boData[h] = Bo[i+1][j+1]->z;
+			h++;
+			//second TRI third VEC Pos
+			frData[h] = Fr[i][j+1]->x; baData[h] = Ba[i][j+1]->x; leData[h] = Le[i][j+1]->x;
+			riData[h] = Ri[i][j+1]->x; toData[h] = To[i][j+1]->x; boData[h] = Bo[i][j+1]->x;
+			h++;
+			frData[h] = Fr[i][j+1]->y; baData[h] = Ba[i][j+1]->y; leData[h] = Le[i][j+1]->y;
+			riData[h] = Ri[i][j+1]->y; toData[h] = To[i][j+1]->y; boData[h] = Bo[i][j+1]->y;
+			h++;
+			frData[h] = Fr[i][j+1]->z; baData[h] = Ba[i][j+1]->z; leData[h] = Le[i][j+1]->z;
+			riData[h] = Ri[i][j+1]->z; toData[h] = To[i][j+1]->z; boData[h] = Bo[i][j+1]->z;
 			h++;
 		}
 	}	
