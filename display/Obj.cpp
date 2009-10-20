@@ -52,6 +52,11 @@ Obj::Obj(std::string file) {
 	this->rot = new vec3f(x,y,z);
 }
 
+Obj::Obj() {
+	created = false;
+	geo = false;
+}
+
 Obj::~Obj() {
 	delete(verSource);
 	delete(fragSource);
@@ -59,6 +64,7 @@ Obj::~Obj() {
 	delete(pos);
 	delete(rot);
 }
+
 
 void Obj::draw(GLfloat *projection) {
 	if(!created) {

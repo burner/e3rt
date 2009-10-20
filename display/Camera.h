@@ -1,10 +1,10 @@
 #include <stack>
-#include "vec3f.h"
+#include "../prim/vec3f.h"
 
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_projection.hpp"
-#include "glm/gtx/type_ptr.hpp"
-#include "glm/GLM_GTX_transform.h"
+#include "../glm/glm.hpp"
+#include "../glm/gtc/matrix_projection.hpp"
+#include "../glm/gtx/type_ptr.hpp"
+#include "../glm/GLM_GTX_transform.h"
 
 #ifndef CAMERA
 #define CAMERA

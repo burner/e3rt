@@ -10,17 +10,16 @@
 #define GL3_PROTOTYPES 1
 #include <GL3/gl3.h>
 
-#include "Timer.h"
+#include "util/Timer.h"
 #include <SDL-1.3/SDL.h>
 #include <SDL-1.3/SDL_mutex.h>
 #include <SDL-1.3/SDL_thread.h>
-#include "utils.h"
-#include "Obj.h"
-#include "ShaderHandle.h"
+#include "display/Obj.h"
+#include "util/ShaderHandle.h"
 #define TIXML_USE_STL
-#include "tinyxml.h"
+#include "tinyxml/tinyxml.h"
 
-#include "Camera.h"
+#include "display/Camera.h"
 
 //matrix
 #include "glm/glm.hpp"

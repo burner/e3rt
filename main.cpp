@@ -93,10 +93,11 @@ bool handle() {
     while(SDL_PollEvent(&event)) {
         switch(event.type) {
             case SDL_QUIT:
+				std::cout<<"FOO QUIT"<<std::endl;
                 result = false;
                 break;
             case SDL_KEYDOWN:
-                //std::cout<<SDL_GetKeyName(event.key.keysym.sym)<<" KEYDOWN"<<std::endl;
+                std::cout<<SDL_GetKeyName(event.key.keysym.sym)<<" KEYDOWN"<<std::endl;
                 break;
             case SDL_KEYUP:
                 if(event.key.keysym.sym == SDLK_ESCAPE) {
