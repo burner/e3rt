@@ -2,11 +2,11 @@ CC=g++
 LD=g++
 #CFLAGS=-Wall -O3 -std=gnu++0x
 CFLAGS=-ggdb -Wall -O3 -std=gnu++0x
-LDFLAGS=-ggdb -Wall -lGL$(/usr/local/sdl-1.3/bin/sdl-config --cflags --libs) -lncurses -std=gnu++0x
+LDFLAGS=-ggdb -Wall -lGL$(/usr/local/sdl-1.3/bin/sdl-config --cflags --libs) -lncurses -std=gnu++0x -lSDL_image libSOIL.a -lSDL_ttf
 TARGET=e3rt
 
 #OBJS=ShaderHandle.o vec3f.o tri.o ObjLoader.o vec2f.o tinyxml.o tinyxmlerror.o tinyxmlparser.o
-OBJS=main.o ShaderHandle.o vec3f.o tri.o ObjLoader.o Timer.o Obj.o vec2f.o tinyxml.o tinyxmlerror.o tinyxmlparser.o Camera.o Sphere.o
+OBJS=main.o ShaderHandle.o vec3f.o tri.o ObjLoader.o Timer.o Obj.o vec2f.o tinyxml.o tinyxmlerror.o tinyxmlparser.o Camera.o Sphere.o FontWriter.o
 
 all: $(TARGET)
 
@@ -57,3 +57,6 @@ tinyxmlparser.o: tinyxml/tinyxml.h tinyxml/tinyxmlparser.cpp
 
 Sphere.o: display/Sphere.h display/Sphere.cpp display/Obj.h display/Obj.cpp
 	$(CC) $(CFLAGS) -c display/Sphere.cpp
+
+FontWriter.o: display/FontWriter.h display/FontWriter.cpp
+	$(CC) $(CFLAGS) -c display/FontWriter.cpp

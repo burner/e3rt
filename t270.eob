@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <Obj name="t270">
 	<ObjFile fileName="t10138u.obj"/>
+	<Diffuse0 fileName="Font.jpg"/>
 	<Shader Vertex="shader.vert" Fragment="shader.frag"/>
 	<Position x="0.0" y="0.0" z="0.0"/>
 	<Rotation x="0.0" y="0.0" z="0.0"/>

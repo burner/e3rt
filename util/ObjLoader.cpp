@@ -242,9 +242,9 @@ void ObjLoader::printNormalArray() {
 
 void ObjLoader::printTextureArray() {
 	for(int i = 0; i < vSize; i+=6) {
-		std::cout<<nor[i]<<" "<<nor[i+1]<<"\t\t";
-		std::cout<<nor[i+2]<<" "<<nor[i+3]<<"\t\t";
-		std::cout<<nor[i+4]<<" "<<nor[i+5]<<std::endl;
+		std::cout<<tex[i]<<" "<<tex[i+1]<<"\t\t";
+		std::cout<<tex[i+2]<<" "<<tex[i+3]<<"\t\t";
+		std::cout<<tex[i+4]<<" "<<tex[i+5]<<std::endl;
 	}
 }
 

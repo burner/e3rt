@@ -22,6 +22,10 @@ Obj::Obj(std::string file) {
 		geo = true;
 	}
 
+	//Textures
+	TiXmlElement *diffuse0El = root->FirstChild("Diffuse0")->ToElement();
+	diffuse0fn = diffuse0El->Attribute("fileName");
+
 	float x,y,z;
 	TiXmlElement *posNode = root->FirstChild("Position")->ToElement();
 	std::stringstream *str;
@@ -66,7 +70,7 @@ Obj::~Obj() {
 }
 
 
-void Obj::draw(GLfloat *projection) {
+void Obj::draw(GLfloat *proj) {
 	if(!created) {
 		//std::cout<<"filename "<<objFile<<" end filename"<<std::endl;
 	
@@ -93,7 +97,13 @@ void Obj::draw(GLfloat *projection) {
 
 		//compile shader
 		glCompileShader(verShader);
+		GLsizei len;
+		GLchar logf[10000];
+		glGetShaderInfoLog(verShader, ((GLsizei)10000), &len, logf);
+		for(GLsizei i = 0; i < len; i++) std::cout<<logf[i];
 		glCompileShader(fragShader);
+		glGetShaderInfoLog(fragShader, ((GLsizei)10000), &len, logf);
+		for(GLsizei i = 0; i < len; i++) std::cout<<logf[i];
 		if(geo) {
 			glCompileShader(geomShader);
 		}
@@ -108,35 +118,10 @@ void Obj::draw(GLfloat *projection) {
 
 		//link shader
 		glLinkProgram(shaderProgram);
-	    
-	/*	const GLfloat tetrahedron[12][3] = {
-	    {  1.0,  1.0,  1.0  }, 
-	    { -1.0, -1.0,  1.0  },
-	    { -1.0,  1.0, -1.0  },
-	    {  1.0,  1.0,  1.0  },
-	    { -1.0, -1.0,  1.0  },
-	    {  1.0, -1.0, -1.0  },
-	    {  1.0,  1.0,  1.0  },
-	    { -1.0,  1.0, -1.0  },
-	    {  1.0, -1.0, -1.0  },
-	    { -1.0, -1.0,  1.0  },
-	    { -1.0,  1.0, -1.0  },
-	    {  1.0, -1.0, -1.0  } };*/
-	
-/*	    const GLfloat colors[12][3] = {
-	    {  1.0,  0.0,  0.0  }, 
-	    {  1.0,  0.0,  0.0  }, 
-	    {  1.0,  0.0,  0.0  }, 
-	    {  0.0,  1.0,  0.0  },
-	    {  0.0,  1.0,  0.0  },
-	    {  0.0,  1.0,  0.0  },
-	    {  0.0,  0.0,  1.0  },
-	    {  0.0,  0.0,  1.0  },
-	    {  0.0,  0.0,  1.0  },
-	    {  1.0,  1.0,  1.0  },
-	    {  1.0,  1.0,  1.0  },
-	    {  1.0,  1.0,  1.0  } };*/
 
+		GLuint uniformDiffuse = glGetAttribLocation(shaderProgram, "Diffuse");
+		glUniform1i(uniformDiffuse,0);
+	   
 		ObjLoader obj(objFile);
 		//obj.printVertexArray();
 		vSize = obj.vSize;
@@ -146,7 +131,7 @@ void Obj::draw(GLfloat *projection) {
 		//floatCount = obj.floatCount;
 		//create vertex array
 		glGenVertexArrays(1, &vao);
-		glGenBuffers(2, vbo);
+		glGenBuffers(3, vbo);
 		glBindVertexArray(vao);
 		
 		//position vertices
@@ -159,15 +144,56 @@ void Obj::draw(GLfloat *projection) {
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 		//glBufferData(GL_ARRAY_BUFFER, sizeof(obj.col), obj.col, GL_STATIC_DRAW);
-		glBufferData(GL_ARRAY_BUFFER, vSize*sizeof(GLfloat), obj.col, GL_STATIC_DRAW);
-		const GLuint colorIdx = glGetAttribLocation(shaderProgram, "in_Color");
-		glVertexAttribPointer(colorIdx, 3, GL_FLOAT, GL_FALSE, 0, 0);
-		glEnableVertexAttribArray(colorIdx);
+		glBufferData(GL_ARRAY_BUFFER, vSize*sizeof(GLfloat), obj.nor, GL_STATIC_DRAW);
+		const GLuint norIdx = glGetAttribLocation(shaderProgram, "in_Nor");
+		glVertexAttribPointer(norIdx, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(norIdx);
+		
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(obj.tex), obj.tex, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, tSize*sizeof(GLfloat), obj.tex, GL_STATIC_DRAW);
+		const GLuint texIdx = glGetAttribLocation(shaderProgram, "in_Tex");
+		glVertexAttribPointer(texIdx, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(texIdx);
+		
+		SDL_Surface *tex = IMG_Load(diffuse0fn.c_str());
+
+		//TTF_Font *font = TTF_OpenFont("FreeSans.ttf", 20);
+		//SDL_Color co;
+		//co.r = 255;
+		//co.g = 155;
+		//co.b = 255;
+		//SDL_Surface *fontSurface = TTF_RenderText_Blended(font, "H", co);
+		//double a = log(fontSurface->w)/log(2);
+		//double b = log(fontSurface->h)/log(2);
+
+		//GLint w =(int) ((pow(2,ceil(a)))+0.5);
+		//GLint h =(int) ((pow(2,ceil(b)))+0.5);
+
+		//SDL_Surface *fontD = SDL_CreateRGBSurface(0,w, h,32,
+		//	0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+
+		//SDL_BlitSurface(fontSurface, 0, fontD, 0);
+
+		//SDL_SaveBMP(fontSurface, "font.bmp");
+		//SDL_SaveBMP(fontD, "font1.bmp");
+
+		glGenTextures( 1, &diffuse0 );
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture( GL_TEXTURE_2D, diffuse0 );
+		glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB, tex->w, tex->h, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->pixels);
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB, fontD->w, fontD->h, 0, GL_RGB, GL_UNSIGNED_BYTE, fontD->pixels);
 		
 		created = true;
 	}
 	//std::cout<<"Draw"<<std::endl;
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, diffuse0);
 	glUseProgram(shaderProgram);
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "mvpmatrix"), 1, GL_FALSE, proj);
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES,0,vSize);
 }

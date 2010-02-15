@@ -5,21 +5,26 @@
 #include <iostream>
 #include <curses.h>
 #include <pthread.h>
+#include "/usr/local/sdl-1.3/include/SDL/SDL.h"
+#include "/usr/local/sdl-1.3/include/SDL/SDL_mutex.h"
+#include "/usr/local/sdl-1.3/include/SDL/SDL_thread.h"
+
+#include <SDL/SDL_ttf.h>
 
 /* Ensure we are using opengl's core profile only */
 #define GL3_PROTOTYPES 1
 #include <GL3/gl3.h>
 
+#include "display/Camera.h"
+#include "display/FontWriter.h"
 #include "util/Timer.h"
-#include <SDL-1.3/SDL.h>
-#include <SDL-1.3/SDL_mutex.h>
-#include <SDL-1.3/SDL_thread.h>
 #include "display/Obj.h"
+#include "display/Sphere.h"
 #include "util/ShaderHandle.h"
 #define TIXML_USE_STL
 #include "tinyxml/tinyxml.h"
 
-#include "display/Camera.h"
+//#include "defines.h"
 
 //matrix
 #include "glm/glm.hpp"
@@ -33,6 +38,7 @@ GLfloat i = 0;
 GLuint shader;
 
 Obj *foo;
+Sphere *sphere;
 
 int width = 1200;
 int height = 800;

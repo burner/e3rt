@@ -38,6 +38,8 @@ Sphere::Sphere() {
 		}
 		m+=step;
 	}
+	
+	std::cout<<step<<std::endl;
 
 	//create vbo data
 	frData = new GLfloat[(k-1)*(k-1)*2*9]; frColor = new GLfloat[(k-1)*(k-1)*2*9];
@@ -46,6 +48,9 @@ Sphere::Sphere() {
 	riData = new GLfloat[(k-1)*(k-1)*2*9]; riColor = new GLfloat[(k-1)*(k-1)*2*9];
 	toData = new GLfloat[(k-1)*(k-1)*2*9]; toColor = new GLfloat[(k-1)*(k-1)*2*9];
 	boData = new GLfloat[(k-1)*(k-1)*2*9]; boColor = new GLfloat[(k-1)*(k-1)*2*9];
+
+	vSize = (k-1)*(k-1)*2*9;
+	
 	unsigned h = 0;
 	for(unsigned i = 0; i < (k-1); i++) {
 		for(unsigned j = 0; j < (k-1); j++) {
@@ -164,5 +169,89 @@ Sphere::Sphere() {
 			toColor[h] = (GLfloat)((rand()/float(RAND_MAX)+1)); boColor[h] = (GLfloat)((rand()/float(RAND_MAX)+1));
 			h++;
 		}
-	}	
+	}
+	//writeVert();	
+}
+
+void Sphere::draw(GLfloat *projection) {
+	if(!created) {
+		//std::cout<<"filename "<<objFile<<" end filename"<<std::endl;
+	
+		//read shader source
+		verSource = readShader("shader.vert");
+		fragSource = readShader("shader.fert");
+		if(geo) {
+			geomSource = readShader(fragRef);
+		}
+		
+		//create shader pointer
+		verShader = glCreateShader(GL_VERTEX_SHADER);
+		fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+		if(geo) {
+			geomShader = glCreateShader(GL_GEOMETRY_SHADER);
+		}
+
+		//bind source to pointer
+		glShaderSource(verShader, 1, (const GLchar**)&verSource, 0);
+		glShaderSource(fragShader, 1, (const GLchar**)&fragSource, 0);
+		if(geo) {
+			glShaderSource(geomShader, 1, (const GLchar**)&geomSource, 0);
+		}
+
+		//compile shader
+		glCompileShader(verShader);
+		glCompileShader(fragShader);
+		if(geo) {
+			glCompileShader(geomShader);
+		}
+
+		//attach shader
+		shaderProgram = glCreateProgram();
+		glAttachShader(shaderProgram, verShader);
+		glAttachShader(shaderProgram, fragShader);
+		if(geo) {
+			glAttachShader(shaderProgram, geomShader);
+		}
+
+		//link shader
+		glLinkProgram(shaderProgram);
+
+		//floatCount = obj.floatCount;
+		//create vertex array
+		glGenVertexArrays(1, &vao);
+		glGenBuffers(2, vbo);
+		glBindVertexArray(vao);
+		
+		//position vertices
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+		//glBufferData(GL_ARRAY_BUFFER, sizeof(obj.vec), obj.vec, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vSize*sizeof(GLfloat), frData, GL_STATIC_DRAW);
+		const GLuint positionIdx = glGetAttribLocation(shaderProgram, "in_Position");
+		glVertexAttribPointer(positionIdx, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(positionIdx);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+		//glBufferData(GL_ARRAY_BUFFER, sizeof(obj.col), obj.col, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vSize*sizeof(GLfloat), frColor, GL_STATIC_DRAW);
+		const GLuint colorIdx = glGetAttribLocation(shaderProgram, "in_Color");
+		glVertexAttribPointer(colorIdx, 3, GL_FLOAT, GL_FALSE, 0, 0);
+		glEnableVertexAttribArray(colorIdx);
+		
+		created = true;
+	}
+	//std::cout<<"Draw"<<std::endl;
+	glUseProgram(shaderProgram);
+	glBindVertexArray(vao);
+	glDrawArrays(GL_TRIANGLES,0,vSize);
+}
+
+void Sphere::writeVert() {
+	for(int i = 0; i < vSize; i++) {
+		if(i%9 == 0) {
+			std::cout<<"\n"<<std::endl;
+		} else if(i%3 == 0) {
+			std::cout<<"\n";
+		}
+		std::cout<<frData[i]<<" ";
+	}
 }

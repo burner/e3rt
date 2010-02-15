@@ -16,5 +16,7 @@ class Sphere : Obj {
 		void makeSphere(float radius);
 	public:
 		Sphere();
+		void draw(GLfloat *projection);
+		void writeVert();
 };
 #endif

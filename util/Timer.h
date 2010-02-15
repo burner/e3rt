@@ -1,6 +1,6 @@
 #include <map>
 #include <string>
-#include <SDL-1.3/SDL.h>
+#include "/usr/local/sdl-1.3/include/SDL/SDL.h"
 #ifndef TIMER
 #define TIMER
 class Timer {
