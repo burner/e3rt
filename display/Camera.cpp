@@ -1,49 +1,102 @@
 #include "Camera.h"
 
-Camera::Camera(float angle, float near, float far, int width, int height) {
-	Proj = glm::perspective(angle, (GLfloat)width/(GLfloat)height, near, far);
+Camera::Camera(vec3f::vec3f p, float angleXZ, float angleyYZ){
+	pos=p;
+	angleXZ=angleXZ;
+	angleYZ=angleYZ;
+	mouseState=false;
+	keyState=0;
+	velocity=0.0f;
 }
 
-void Camera::placeCam() {
-	glm::mat4 VTrans = glm::translate(pos.x, pos.y, pos.z);
-	glm::mat4 ViewRotX = glm::rotate(rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	glm::mat4 ViewRotY = glm::rotate(rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 ViewRotZ = glm::rotate(rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
-	View = VTrans * ViewRotX * ViewRotY * ViewRotZ;
+glm::mat4 Camera::applyCamMatrix() {
+	
+	switch(keyState){
+		case KEY_STATE_FORWARD:
+			if(velocity<=MAX_VELOCITY)velocity+=MOVE_STEP;
+			
+			moveForward();
+		break;
+		case KEY_STATE_BACKWARD:
+			if(velocity>=-MAX_VELOCITY)velocity-=MOVE_STEP;
+			moveForward();
+		break;
+		case KEY_STATE_LEFT:
+			moveLeft();
+		break;
+		case KEY_STATE_RIGHT:
+			moveRight();
+		break;
+
+		default:
+			//std::cout<<velocity<<std::endl;
+			if(velocity<-MOVE_STEP || velocity>MOVE_STEP){
+			velocity*=0.96f;
+			moveForward();
+			}
+		break;
+	}
+
+	glm::mat4 retMat = glm::rotate(angleXZ, glm::vec3(0.0f, 1.0f, 0.0f));
+	retMat *= glm::rotate(angleYZ, glm::vec3(1.0f, 0.0f, 0.0f));
+	retMat *= glm::translate(-pos.x, -pos.y, -pos.z);
+	
+	return retMat;
+
 }
 
-void Camera::setMiddle(int x, int y) {
-	mChange = true;
-	mX = x; mY = y;
-	cX = 0; cY = 0;
+void Camera::setKeyState(int key){
+	keyState=key;		
 }
 
-void Camera::setCurrent(int x, int y) {
-	cX = x; cY = y;
+void Camera::setMouseState(int s){
+	mouseState=s;
 }
 
-void Camera::unsetMiddle() {
-	mChange = false;
-	cX = 0; cY = 0;
-	mX = 0; mY = 0;
+
+void Camera::moveLeft(void){
+		vec3f::vec3f direction(
+		-sin((90.0f + angleXZ) * PI / 180),
+		0.0, 
+		cos((90.0f + angleXZ) * PI / 180));
+	direction*= MOVE_STEP*100.f;
+	pos+=direction;
 }
 
-bool Camera::getMiddleState() {
-	return mChange;
+
+
+void Camera::moveRight(void){
+		vec3f::vec3f direction(
+		sin((90.0f + angleXZ) * PI / 180),
+		0.0, 
+		-cos((90.0f + angleXZ) * PI / 180));
+	direction*= MOVE_STEP*100.f;
+	pos+=direction;
 }
 
-int Camera::getMiddleX() {
-	return mX;
+
+
+
+void Camera::moveForward(void){
+	vec3f::vec3f direction(
+		sin(angleXZ*PI/180),
+		0.0,
+		-cos(angleXZ*PI/180));
+	direction*= velocity;
+	pos+=direction;
 }
 
-int Camera::getMiddleY() {
-	return mY;
+
+
+void Camera::moveBackward(void){
+
 }
 
-int Camera::getCurrentX() {
-	return cX;
-}
-
-int Camera::getCurrentY() {
-	return cY;
-}
+void Camera::moveUp(void){};
+void Camera::moveDown(void){};
+void Camera::turnCamera(float thetaX, float thetaY){
+	if(mouseState==1){
+		angleXZ = (angleXZ + 0.3 * thetaX);
+		angleYZ = (angleYZ + 0.05 * thetaY);
+	}
+};

@@ -1,4 +1,5 @@
 #include "main.h"
+using namespace std;
 
 void setupwindow(SDL_WindowID *window, SDL_GLContext *context, int height, int width) {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) { 
@@ -33,34 +34,81 @@ void setupwindow(SDL_WindowID *window, SDL_GLContext *context, int height, int w
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDepthFunc(GL_LESS);
 	Timer::createTimer("fpsTicks");
-
 	//curses
-	//initscr();
+	initscr();
 	curs_set(0);
 }
 
 void setupSzene() {
-	FontWriter::initFontWriter();
+	Projection = glm::perspective(45.0f, (GLfloat)width/(GLfloat)height, 0.1f, 20000.0f);
+	View = glm::translate(0.f,0.f,0.f);
+	//cout<<"setupScene\n";
+	//FontWriter::initFontWriter();
+	vec3f::vec3f camPos(-2.0f, 1.0f, 90.0f);
+	//tCam=new Camera(camPos, 23.f, -45.f);
 	foo = new Obj("t270.eob");
+	litMonkey = new Obj("litMonkey.eob");
+	ground = new Obj("ground.eob");
 	//sphere = new Sphere();
 }
 
 void drawscene(SDL_WindowID window) {
-	//i = (i+0.05f);
-	glm::mat4 Projection = glm::perspective(45.0f, (GLfloat)width/(GLfloat)height, 0.1f, 20000.0f);
-	glm::mat4 ViewTranslate = glm::translate(0.0f,0.0f,-4.0f);
-	glm::mat4 ViewRotateX = glm::rotate(i, glm::vec3(1.0f, 0.0f, 0.0f));
-	glm::mat4 ViewRotateY = glm::rotate(0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 ViewRotateZ = glm::rotate(0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-	glm::mat4 View = ViewTranslate * ViewRotateX * ViewRotateY * ViewRotateZ;
-
-	//glUniformMatrix4fv(glGetUniformLocation(foo->getShaderHandle(), "mvpmatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
-
+	i = (i+0.05f);
+	if(i>=100.f){i=0.f;}
 	glClearColor(0.0, 0.0, 0.3, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-	//foo->draw((GLfloat*)glm::value_ptr(Projection*View));
-	//sphere->draw(NULL);
-	FontWriter::render();
+
+	View = tCam.applyCamMatrix();
+
+
+	pushViewMatrix();
+	View *=  glm::translate(-2.0f,0.f,0.0f);
+	View *= glm::scale(0.5f, 0.5f, 0.5f);
+	View *= glm::rotate(i, glm::vec3(1.0f, 0.0f, 0.0f));
+	View *= glm::rotate(i, glm::vec3(0.0f, 1.0f, 0.0f));
+	View *= glm::rotate(i, glm::vec3(0.0f, 0.0f, 1.0f));
+	glUniformMatrix4fv(glGetUniformLocation(foo->getShaderHandle(), "mvpmatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
+	foo->draw((GLfloat*)glm::value_ptr(Projection*View));
+	
+	pushViewMatrix();
+	View *= glm::rotate(23.0f*i, glm::vec3(0.0f, 0.0f, 1.0f));
+	View *=  glm::translate(-1.f,-0.7f,0.3f);
+	View *= glm::scale(0.2f, 0.2f, 0.2f);
+	glUniformMatrix4fv(glGetUniformLocation(foo->getShaderHandle(), "mvpmatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
+	foo->draw((GLfloat*)glm::value_ptr(Projection*View));
+	popViewMatrix();
+	
+	
+	View *= glm::rotate(46.0f*i, glm::vec3(1.0f, 0.0f, 0.0f));
+	View *=  glm::translate(-2.f,-0.0f,0.0f);
+	View *= glm::scale(0.6f, 0.1f, 0.8f);
+	glUniformMatrix4fv(glGetUniformLocation(foo->getShaderHandle(), "mvpmatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
+	foo->draw((GLfloat*)glm::value_ptr(Projection*View));
+	
+	popViewMatrix();
+	
+	pushViewMatrix();
+	View *= glm::translate(0.0f,0.0f,(i/10.f<10.f?-(i/10.f):-10.f));
+	View *= glm::rotate((0.2f*i), glm::vec3(1.0f, 0.0f, 0.0f));
+	GLfloat tmp[3];
+	tmp[0]=9.1f;
+	tmp[1]=3.0f;
+	tmp[2]=-0.5f;
+	glUniform3f(glGetUniformLocation(litMonkey->getShaderHandle(), "lightsource"), tmp[0], tmp[1], tmp[2]);
+	glUniformMatrix4fv(glGetUniformLocation(litMonkey->getShaderHandle(), "mvpmatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
+	glUniformMatrix4fv(glGetUniformLocation(litMonkey->getShaderHandle(), "pmatrix"), 1, GL_FALSE, glm::value_ptr(Projection));
+	litMonkey->draw((GLfloat*)glm::value_ptr(Projection*View));
+	popViewMatrix();
+	
+	
+	View *= glm::translate(0.0f,-1.0f,0.0f) *glm::scale(20.0f, 0.0f, 20.0f) ;
+	//View *= glm::rotate(0.f, glm::vec3(1.0f, 0.0f, 0.0f));
+	//View *=glm::rotate(0.f, glm::vec3(0.0f, 1.0f, 0.0f));
+	//View *=glm::rotate(0.f, glm::vec3(0.0f, 0.0f, 1.0f));
+	//glUniform3f(glGetUniformLocation(ground->getShaderHandle(), "lightsource"), 0.0f,0.0f,0.0f);
+	glUniformMatrix4fv(glGetUniformLocation(ground->getShaderHandle(), "mvpmatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
+	ground->draw((GLfloat*)glm::value_ptr(Projection*View));
+	
 	SDL_GL_SwapWindow(window);
 }
 
@@ -75,6 +123,8 @@ int main(int argc, char *argv[]) {
 	foo = NULL;
 	SDL_WindowID mainwindow;
 	SDL_GLContext maincontext;
+
+	//cout<<"main\n";
 	
 	setupwindow(&mainwindow, &maincontext, height, width);
 	setupSzene();
@@ -88,8 +138,8 @@ int main(int argc, char *argv[]) {
 			frames++;
 		}
 		mvprintw(1,1, "FPS: %d", fps);
-		mvprintw(2,1, "Mousemiddle  X = %d : Y = %d", tCam.getMiddleX(), tCam.getMiddleY());
-		mvprintw(3,1, "Mousecurrent X = %d : Y = %d", tCam.getCurrentX(), tCam.getCurrentY());
+		//mvprintw(2,1, "Mousemiddle  X = %d : Y = %d", tCam.getMiddleX(), tCam.getMiddleY());
+		//mvprintw(3,1, "Mousecurrent X = %d : Y = %d", tCam.getCurrentX(), tCam.getCurrentY());
 		refresh();
 	}
 	destroywindow(mainwindow, maincontext);
@@ -106,37 +156,54 @@ bool handle() {
 				result = false;
 				break;
             case SDL_KEYDOWN:
-                std::cout<<SDL_GetKeyName(event.key.keysym.sym)<<" KEYDOWN"<<std::endl;
+               // std::cout<<SDL_GetKeyName(event.key.keysym.sym)<<" KEYDOWN"<<std::endl;
+					switch(event.key.keysym.sym){
+					case 119:
+					case 115:
+					case 97:
+					case 100:
+						tCam.setKeyState(event.key.keysym.sym);
+					break;
+					default:
+					break;
+				}
                 break;
             case SDL_KEYUP:
+            	tCam.setKeyState(0);
                 if(event.key.keysym.sym == SDLK_ESCAPE) {
                     result = false;
                 }
                 break;
-			//MOUSEBUTTONDOWN is MOUSEMOTION
 			case SDL_MOUSEBUTTONDOWN:
-				std::cout<<"MOUSEDOWN"<<std::endl;
+				//std::cout<<"MOUSEDOWN"<<std::endl;
 				int x, y;
 				SDL_GetMouseState(&x, &y);
-				tCam.setCurrent(x,y);
-				if(event.button.button == SDL_BUTTON_MIDDLE) {
-					if(!tCam.getMiddleState()) {
-						tCam.setMiddle(x,y);
-					}
+				if(event.button.button == SDL_BUTTON_LEFT) {
+					tCam.setMouseState(1);
+				//	
 				}
 				//std::cout<<x<<" "<<y<<std::endl;
 				break;
-			//MOUSEBUTTONUP is MOUSEBUTTONDOWN
 			case SDL_MOUSEBUTTONUP:
-				std::cout<<"MouseUP"<<std::endl;
-				if(event.button.button == SDL_BUTTON_MIDDLE) {
-					tCam.unsetMiddle();
-				}
+				//std::cout<<"MouseUP"<<std::endl;
+				//SDL_GetMouseState(&x, &y);
+				//tCam.turnCamera(event.motion.xrel, event.motion.yrel);
+				tCam.setMouseState(0);
 				break;
 			case SDL_MOUSEMOTION:
-				std::cout<<"MouseUP"<<std::endl;
+				//std::cout<<"MouseMotion"<<std::endl;
+				tCam.turnCamera(event.motion.xrel, event.motion.yrel);
 				break;
         }
     }
 	return result;
+}
+
+void pushViewMatrix(){
+	viewStack.push(View);
+}
+
+void popViewMatrix(){
+	View=viewStack.top();
+	viewStack.pop();
 }

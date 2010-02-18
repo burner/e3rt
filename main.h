@@ -16,7 +16,6 @@
 #include <GL3/gl3.h>
 
 #include "display/Camera.h"
-#include "display/FontWriter.h"
 #include "util/Timer.h"
 #include "display/Obj.h"
 #include "display/Sphere.h"
@@ -37,20 +36,28 @@
 GLfloat i = 0;
 GLuint shader;
 
-Obj *foo;
+Obj *foo,*ground,*litMonkey;
 Sphere *sphere;
 
 int width = 1200;
 int height = 800;
-float angle = 45.0f;
+vec3f::vec3f camPos(2.0f, 1.0f, 8.0f);
+
 int fps;
 int frames;
 bool result;
-Camera tCam(angle, 0.1f, 100.0f, width, height);
+std::stack<glm::mat4> viewStack;
+glm::mat4 View;
+glm::mat4 Projection;
+
+
+Camera tCam(camPos, 23.f, -45.f);
 
 void setupwindow(SDL_WindowID *window, SDL_GLContext *context, int height, int width);
 void drawscene(SDL_WindowID window); 
 void setupSzene();
 void destroywindow(SDL_WindowID window, SDL_GLContext context);
+void pushViewMatrix();
+void popViewMatrix();
 bool handle();
 int main(int argc, char *argv[]);

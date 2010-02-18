@@ -1,6 +1,7 @@
 #include "Obj.h"
 
 Obj::Obj(std::string file) {
+	std::cout<<"Obj constr.\n";
 	created = false;
 	geo = false;
 	TiXmlDocument doc(file);
@@ -54,6 +55,7 @@ Obj::Obj(std::string file) {
 	*str >> z;
 	delete(str);
 	this->rot = new vec3f(x,y,z);
+	std::cout<<"constr. end\n";
 }
 
 Obj::Obj() {
@@ -72,7 +74,8 @@ Obj::~Obj() {
 
 void Obj::draw(GLfloat *proj) {
 	if(!created) {
-		//std::cout<<"filename "<<objFile<<" end filename"<<std::endl;
+		
+		std::cout<<"filename "<<objFile<<" end filename"<<std::endl;
 	
 		//read shader source
 		verSource = readShader(verRef);
@@ -189,7 +192,7 @@ void Obj::draw(GLfloat *proj) {
 		
 		created = true;
 	}
-	//std::cout<<"Draw"<<std::endl;
+//	std::cout<<"Draw"<<std::endl;
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, diffuse0);
 	glUseProgram(shaderProgram);
