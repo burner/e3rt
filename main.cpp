@@ -97,9 +97,9 @@ void drawscene(SDL_WindowID window) {
 	
 //Lightsource position
 	GLfloat tmp[3];
-	tmp[0]=3.0f;
-	tmp[1]=3.0f;
-	tmp[2]=3.0f;
+	tmp[0]=2.0f;
+	tmp[1]=10.0f;
+	tmp[2]=-5.0f;
 	
 	
 	//Get the NormalMatrix
@@ -110,6 +110,8 @@ void drawscene(SDL_WindowID window) {
 	//std::cout<<"\nx:"<<litMonkey->getShaderHandle()<<"\n";
 //	std::cout<<"\nx:"<<glGetUniformLocation(litMonkey->getShaderHandle(), "lightsource")<<"\n";
 	glUniformMatrix4fv(glGetUniformLocation(litMonkey->getShaderHandle(), "MVPMatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
+	glUniformMatrix4fv(glGetUniformLocation(litMonkey->getShaderHandle(), "MVMatrix"), 1, GL_FALSE, glm::value_ptr(View));
+	glUniformMatrix4fv(glGetUniformLocation(litMonkey->getShaderHandle(), "PMatrix"), 1, GL_FALSE, glm::value_ptr(Projection));
 	glUniform3f(glGetUniformLocation(litMonkey->getShaderHandle(), "lightsource"), tmp[0],tmp[1],tmp[2]);
 	glUniformMatrix3fv(glGetUniformLocation(litMonkey->getShaderHandle(), "NormalMatrix"), 1, GL_FALSE, glm::value_ptr(NormalMatrix));
 	litMonkey->draw((GLfloat*)glm::value_ptr(Projection*View));
@@ -123,6 +125,9 @@ void drawscene(SDL_WindowID window) {
 	NormalMatrix2=glm::transpose(NormalMatrix2);
 	glUseProgram(litMonkey2->getShaderHandle());
 	glUniformMatrix4fv(glGetUniformLocation(litMonkey2->getShaderHandle(), "MVPMatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
+	glUniform3f(glGetUniformLocation(litMonkey2->getShaderHandle(), "lightsource"), tmp[0],tmp[1],tmp[2]);
+	glUniformMatrix4fv(glGetUniformLocation(litMonkey2->getShaderHandle(), "PMatrix"), 1, GL_FALSE, glm::value_ptr(Projection));
+	glUniformMatrix4fv(glGetUniformLocation(litMonkey2->getShaderHandle(), "MVMatrix"), 1, GL_FALSE, glm::value_ptr(View));
 	glUniformMatrix3fv(glGetUniformLocation(litMonkey2->getShaderHandle(), "NormalMatrix"), 1, GL_FALSE, glm::value_ptr(NormalMatrix2));
 	litMonkey2->draw((GLfloat*)glm::value_ptr(Projection*View));
 	popViewMatrix();

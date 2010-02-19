@@ -8,6 +8,8 @@ in vec2 in_Tex;
 
 // mvpmatrix is the result of multiplying the model, view, and projection matrices */
 uniform mat4 MVPMatrix;
+uniform mat4 MVMatrix;
+uniform mat4 PMatrix;
 uniform mat3 NormalMatrix;
 uniform vec3 lightsource;
 
@@ -39,7 +41,7 @@ void main() {
 	
 		vec4 tmp = MVPMatrix * vec4(in_Position, 1.0);
 		normal = normalize(NormalMatrix*in_Nor);
-		vec3 lightsource_tmp=vec3(MVPMatrix*vec4(lightsource,1.0));
+		vec3 lightsource_tmp=vec3(PMatrix*vec4(lightsource,1.0));
 		lightDir = normalize(lightsource_tmp-tmp.xyz);
 		eyeVec=-tmp.xyz;
 		
@@ -58,7 +60,7 @@ void main() {
 		
 		
 		gl_Position = tmp;
-		pos=in_Position;
+		pos=(MVMatrix*vec4(in_Position,1.0)).xyz;
 		logFrag = tmp.z;
 		ex_Tex = in_Tex;	
 }

@@ -21,8 +21,8 @@ void main (void)
 	//vec3 final_color= noise3(pos.z);
 	vec3 final_color = texture2D(Diffuse, ex_Tex).xyz * vec3(0.3, 0.3, 0.4);
 	final_color *= texture2D(Diffuse, ex_Tex+vec2(0.03,0.03)).xyz * vec3(0.4, 0.3, 0.3)+ vec3(0.1,0.1,0.1);
-	final_color+= (pos.y)*SkyColor*0.1;
-	final_color+= (1.0-pos.y)*GroundColor*0.1;
+	final_color+= (pos.y)*SkyColor*0.05;
+	final_color+= (1.5-pos.y)*GroundColor*0.05;
 	
 	final_color+=DiffuseColor;//spherical harmonics from vs
 	vec3 N = normalize(normal);
