@@ -9,6 +9,7 @@ in vec2 in_Tex;
 // mvpmatrix is the result of multiplying the model, view, and projection matrices */
 uniform mat4 MVPMatrix;
 uniform mat4 MVMatrix;
+uniform mat4 MMatrix;
 uniform mat4 PMatrix;
 uniform mat3 NormalMatrix;
 uniform vec3 lightsource;
@@ -60,7 +61,8 @@ void main() {
 		
 		
 		gl_Position = tmp;
-		pos=(MVMatrix*vec4(in_Position,1.0)).xyz;
+		pos=(MMatrix*vec4(in_Position,1.0)).xyz;
+		//pos=in_Position;
 		logFrag = tmp.z;
 		ex_Tex = in_Tex;	
 }

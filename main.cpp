@@ -94,6 +94,8 @@ void drawscene(SDL_WindowID window) {
 	pushViewMatrix();
 	View *= glm::translate(0.0f,0.0f,(i/10.f<10.f?-(i/10.f):-10.f));
 	View *= glm::rotate((2.2f*i), glm::vec3(0.0f, 1.0f, 0.4f));
+	glm::mat4 Model = glm::translate(0.0f,0.0f,(i/10.f<10.f?-(i/10.f):-10.f));
+	Model *= glm::rotate((2.2f*i), glm::vec3(0.0f, 1.0f, 0.4f));
 	
 //Lightsource position
 	GLfloat tmp[3];
@@ -109,6 +111,7 @@ void drawscene(SDL_WindowID window) {
 	glUseProgram(litMonkey->getShaderHandle());
 	//std::cout<<"\nx:"<<litMonkey->getShaderHandle()<<"\n";
 //	std::cout<<"\nx:"<<glGetUniformLocation(litMonkey->getShaderHandle(), "lightsource")<<"\n";
+	glUniformMatrix4fv(glGetUniformLocation(litMonkey->getShaderHandle(), "MMatrix"), 1, GL_FALSE, glm::value_ptr(Model));
 	glUniformMatrix4fv(glGetUniformLocation(litMonkey->getShaderHandle(), "MVPMatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
 	glUniformMatrix4fv(glGetUniformLocation(litMonkey->getShaderHandle(), "MVMatrix"), 1, GL_FALSE, glm::value_ptr(View));
 	glUniformMatrix4fv(glGetUniformLocation(litMonkey->getShaderHandle(), "PMatrix"), 1, GL_FALSE, glm::value_ptr(Projection));
@@ -120,10 +123,14 @@ void drawscene(SDL_WindowID window) {
 
 	pushViewMatrix();
 	View *= glm::translate(3.0f, 0.2f, 0.0f) * glm::rotate(2.0f*i, glm::vec3(1.0f, 0.0f, 0.0f));
+	View *= glm::scale(0.02f*i,0.02f*i,0.02f*i);
+	glm::mat4 Model2 = glm::translate(3.0f, 0.2f, 0.0f) * glm::rotate(2.0f*i, glm::vec3(1.0f, 0.0f, 0.0f));
+	Model2 *= glm::scale(0.02f*i,0.02f*i,0.02f*i);
 	glm::mat3 NormalMatrix2(View); 
 	NormalMatrix2=glm::inverse(NormalMatrix2);
 	NormalMatrix2=glm::transpose(NormalMatrix2);
 	glUseProgram(litMonkey2->getShaderHandle());
+	glUniformMatrix4fv(glGetUniformLocation(litMonkey2->getShaderHandle(), "MMatrix"), 1, GL_FALSE, glm::value_ptr(Model2));
 	glUniformMatrix4fv(glGetUniformLocation(litMonkey2->getShaderHandle(), "MVPMatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
 	glUniform3f(glGetUniformLocation(litMonkey2->getShaderHandle(), "lightsource"), tmp[0],tmp[1],tmp[2]);
 	glUniformMatrix4fv(glGetUniformLocation(litMonkey2->getShaderHandle(), "PMatrix"), 1, GL_FALSE, glm::value_ptr(Projection));
