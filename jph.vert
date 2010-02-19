@@ -12,7 +12,8 @@ uniform mat3 NormalMatrix;
 uniform vec3 lightsource;
 
 out float logFrag;
-out vec3 eyeVec, normal, lightDir;
+out vec3 eyeVec, normal, lightDir,pos;
+out vec2 ex_Tex;
 const float ScaleFactor=0.5;
 
 const float C1 = 0.429043;
@@ -57,5 +58,7 @@ void main() {
 		
 		
 		gl_Position = tmp;
+		pos=in_Position;
 		logFrag = tmp.z;
+		ex_Tex = in_Tex;	
 }

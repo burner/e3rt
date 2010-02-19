@@ -97,9 +97,9 @@ void drawscene(SDL_WindowID window) {
 	
 //Lightsource position
 	GLfloat tmp[3];
-	tmp[0]=2.0f;
-	tmp[1]=5.0f;
-	tmp[2]=3.5f;
+	tmp[0]=3.0f;
+	tmp[1]=3.0f;
+	tmp[2]=3.0f;
 	
 	
 	//Get the NormalMatrix

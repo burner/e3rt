@@ -2,7 +2,7 @@
 <Obj name="litMonkey">
 	<ObjFile fileName="t3788u.obj"/>
 <!--	<ObjFile fileName="dings.obj"/>-->
-	<Diffuse0 fileName="ground.jpg"/>
+	<Diffuse0 fileName="noise.jpg"/>
 	<!--<Shader Vertex="phong.vert" Fragment="phong.frag"/>-->
 	<Shader Vertex="jph.vert" Fragment="jph.frag"/>
 	<Position x="0.0" y="0.0" z="0.0"/>
