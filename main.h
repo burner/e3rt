@@ -36,7 +36,7 @@
 GLfloat i = 0;
 GLuint shader;
 
-Obj *foo,*ground,*litMonkey;
+Obj *foo,*ground,*litMonkey, *litMonkey2;
 Sphere *sphere;
 
 int width = 1200;

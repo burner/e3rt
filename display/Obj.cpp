@@ -196,12 +196,13 @@ void Obj::draw(GLfloat *proj) {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, diffuse0);
 	glUseProgram(shaderProgram);
-	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "mvpmatrix"), 1, GL_FALSE, proj);
+	//glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "mvpmatrix"), 1, GL_FALSE, proj);
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES,0,vSize);
 }
 
 GLuint Obj::getShaderHandle() {
+	
 	return shaderProgram;
 }
 

@@ -4,7 +4,7 @@
 <!--	<ObjFile fileName="dings.obj"/>-->
 	<Diffuse0 fileName="ground.jpg"/>
 	<!--<Shader Vertex="phong.vert" Fragment="phong.frag"/>-->
-	<Shader Vertex="jph.vert" Fragment="jph.frag"/>
+	<Shader Vertex="oldtown.vert" Fragment="oldtown.frag"/>
 	<Position x="0.0" y="0.0" z="0.0"/>
 	<Rotation x="0.0" y="0.0" z="0.0"/>
 </Obj>
