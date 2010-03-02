@@ -1,3 +1,4 @@
+void initPerlin();
 double fade(double t);
 double lerp(double t, double a, double b);
 double grad(int inhash, double x, double y, double z);
