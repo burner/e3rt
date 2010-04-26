@@ -6,7 +6,7 @@ LDFLAGS=-ggdb -Wall -lGL$(/usr/local/sdl-1.3/bin/sdl-config --cflags --libs) -ln
 TARGET=e3rt
 
 #OBJS=ShaderHandle.o vec3f.o tri.o ObjLoader.o vec2f.o tinyxml.o tinyxmlerror.o tinyxmlparser.o
-OBJS=main.o ShaderHandle.o vec3f.o tri.o ObjLoader.o Timer.o Obj.o vec2f.o tinyxml.o tinyxmlerror.o tinyxmlparser.o Camera.o Sphere.o
+OBJS=main.o ShaderHandle.o vec3f.o tri.o ObjLoader.o Timer.o Obj.o vec2f.o tinyxml.o tinyxmlerror.o tinyxmlparser.o Camera.o
 
 all: $(TARGET)
 

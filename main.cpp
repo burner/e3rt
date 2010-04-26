@@ -47,9 +47,6 @@ void setupSzene() {
 	vec3f::vec3f camPos(-2.0f, 1.0f, 90.0f);
 	//tCam=new Camera(camPos, 23.f, -45.f);
 	foo = new Obj("t270.eob");
-	litMonkey = new Obj("litMonkey.eob");
-	litMonkey2 = new Obj("litMonkey2.eob");
-	ground = new Obj("ground.eob");
 	//sphere = new Sphere();
 }
 
@@ -71,86 +68,6 @@ void drawscene(SDL_WindowID window) {
 	glUseProgram(foo->getShaderHandle());
 	glUniformMatrix4fv(glGetUniformLocation(foo->getShaderHandle(), "mvpmatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
 	foo->draw((GLfloat*)glm::value_ptr(Projection*View));
-	
-	pushViewMatrix();
-	View *= glm::rotate(23.0f*i, glm::vec3(0.0f, 0.0f, 1.0f));
-	View *=  glm::translate(-1.f,-0.7f,0.3f);
-	View *= glm::scale(0.2f, 0.2f, 0.2f);
-	glUseProgram(foo->getShaderHandle());
-	glUniformMatrix4fv(glGetUniformLocation(foo->getShaderHandle(), "mvpmatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
-	foo->draw((GLfloat*)glm::value_ptr(Projection*View));
-	popViewMatrix();
-	
-	
-	View *= glm::rotate(46.0f*i, glm::vec3(1.0f, 0.0f, 0.0f));
-	View *=  glm::translate(-2.f,-0.0f,0.0f);
-	View *= glm::scale(0.6f, 0.1f, 0.8f);
-	glUseProgram(foo->getShaderHandle());
-	glUniformMatrix4fv(glGetUniformLocation(foo->getShaderHandle(), "mvpmatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
-	foo->draw((GLfloat*)glm::value_ptr(Projection*View));
-	
-	popViewMatrix();
-	
-	pushViewMatrix();
-	View *= glm::translate(0.0f,0.0f,(i/10.f<10.f?-(i/10.f):-10.f));
-	View *= glm::rotate((2.2f*i), glm::vec3(0.0f, 1.0f, 0.4f));
-	glm::mat4 Model = glm::translate(0.0f,0.0f,(i/10.f<10.f?-(i/10.f):-10.f));
-	Model *= glm::rotate((2.2f*i), glm::vec3(0.0f, 1.0f, 0.4f));
-	
-//Lightsource position
-	GLfloat tmp[3];
-	tmp[0]=2.0f;
-	tmp[1]=10.0f;
-	tmp[2]=-5.0f;
-	
-	
-	//Get the NormalMatrix
-	glm::mat3 NormalMatrix(View); 
-	NormalMatrix=glm::inverse(NormalMatrix);
-	NormalMatrix=glm::transpose(NormalMatrix);
-	glUseProgram(litMonkey->getShaderHandle());
-	//std::cout<<"\nx:"<<litMonkey->getShaderHandle()<<"\n";
-//	std::cout<<"\nx:"<<glGetUniformLocation(litMonkey->getShaderHandle(), "lightsource")<<"\n";
-	glUniformMatrix4fv(glGetUniformLocation(litMonkey->getShaderHandle(), "MMatrix"), 1, GL_FALSE, glm::value_ptr(Model));
-	glUniformMatrix4fv(glGetUniformLocation(litMonkey->getShaderHandle(), "MVPMatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
-	glUniformMatrix4fv(glGetUniformLocation(litMonkey->getShaderHandle(), "MVMatrix"), 1, GL_FALSE, glm::value_ptr(View));
-	glUniformMatrix4fv(glGetUniformLocation(litMonkey->getShaderHandle(), "PMatrix"), 1, GL_FALSE, glm::value_ptr(Projection));
-	glUniform3f(glGetUniformLocation(litMonkey->getShaderHandle(), "lightsource"), tmp[0],tmp[1],tmp[2]);
-	glUniformMatrix3fv(glGetUniformLocation(litMonkey->getShaderHandle(), "NormalMatrix"), 1, GL_FALSE, glm::value_ptr(NormalMatrix));
-	litMonkey->draw((GLfloat*)glm::value_ptr(Projection*View));
-	popViewMatrix();
-
-
-	pushViewMatrix();
-	View *= glm::translate(3.0f, 0.2f, 0.0f) * glm::rotate(2.0f*i, glm::vec3(1.0f, 0.0f, 0.0f));
-	View *= glm::scale(0.02f*i,0.02f*i,0.02f*i);
-	glm::mat4 Model2 = glm::translate(3.0f, 0.2f, 0.0f) * glm::rotate(2.0f*i, glm::vec3(1.0f, 0.0f, 0.0f));
-	Model2 *= glm::scale(0.02f*i,0.02f*i,0.02f*i);
-	glm::mat3 NormalMatrix2(View); 
-	NormalMatrix2=glm::inverse(NormalMatrix2);
-	NormalMatrix2=glm::transpose(NormalMatrix2);
-	glUseProgram(litMonkey2->getShaderHandle());
-	glUniformMatrix4fv(glGetUniformLocation(litMonkey2->getShaderHandle(), "MMatrix"), 1, GL_FALSE, glm::value_ptr(Model2));
-	glUniformMatrix4fv(glGetUniformLocation(litMonkey2->getShaderHandle(), "MVPMatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
-	glUniform3f(glGetUniformLocation(litMonkey2->getShaderHandle(), "lightsource"), tmp[0],tmp[1],tmp[2]);
-	glUniformMatrix4fv(glGetUniformLocation(litMonkey2->getShaderHandle(), "PMatrix"), 1, GL_FALSE, glm::value_ptr(Projection));
-	glUniformMatrix4fv(glGetUniformLocation(litMonkey2->getShaderHandle(), "MVMatrix"), 1, GL_FALSE, glm::value_ptr(View));
-	glUniformMatrix3fv(glGetUniformLocation(litMonkey2->getShaderHandle(), "NormalMatrix"), 1, GL_FALSE, glm::value_ptr(NormalMatrix2));
-	litMonkey2->draw((GLfloat*)glm::value_ptr(Projection*View));
-	popViewMatrix();
-
-
-
-	
-	
-	View *= glm::translate(0.0f,-1.0f,0.0f) *glm::scale(20.0f, 20.0f, 20.0f) ;
-	//View *= glm::rotate(0.f, glm::vec3(1.0f, 0.0f, 0.0f));
-	//View *=glm::rotate(0.f, glm::vec3(0.0f, 1.0f, 0.0f));
-	//View *=glm::rotate(0.f, glm::vec3(0.0f, 0.0f, 1.0f));
-	//glUniform3f(glGetUniformLocation(ground->getShaderHandle(), "lightsource"), 0.0f,0.0f,0.0f);
-	glUseProgram(ground->getShaderHandle());	
-	glUniformMatrix4fv(glGetUniformLocation(ground->getShaderHandle(), "mvpmatrix"), 1, GL_FALSE, glm::value_ptr(Projection*View));
-	ground->draw((GLfloat*)glm::value_ptr(Projection*View));
 	
 	SDL_GL_SwapWindow(window);
 }

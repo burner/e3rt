@@ -18,7 +18,6 @@
 #include "display/Camera.h"
 #include "util/Timer.h"
 #include "display/Obj.h"
-#include "display/Sphere.h"
 #include "util/ShaderHandle.h"
 #define TIXML_USE_STL
 #include "tinyxml/tinyxml.h"
@@ -37,7 +36,6 @@ GLfloat i = 0;
 GLuint shader;
 
 Obj *foo,*ground,*litMonkey, *litMonkey2;
-Sphere *sphere;
 
 int width = 1200;
 int height = 800;
